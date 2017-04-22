@@ -2,10 +2,14 @@
 
 public class MovementController : MonoBehaviour
 {
-    public KeyCode UpKey = KeyCode.UpArrow;
-    public KeyCode DownKey = KeyCode.DownArrow;
-    public KeyCode LeftKey = KeyCode.LeftArrow;
-    public KeyCode RightKey = KeyCode.RightArrow;
+    public KeyCode UpKey = KeyCode.W;
+    public KeyCode DownKey = KeyCode.S;
+    public KeyCode LeftKey = KeyCode.A;
+    public KeyCode RightKey = KeyCode.D;
+
+    public KeyCode JumpKey = KeyCode.Space;
+
+    public float JumpPower = 10f;
 
     void Start()
     {
@@ -35,6 +39,11 @@ public class MovementController : MonoBehaviour
         }
 
         body.AddForce(direction / 5, ForceMode2D.Impulse);
+
+        if (Input.GetKeyDown(this.JumpKey))
+        {
+            body.AddForce(body.transform.up * JumpPower, ForceMode2D.Impulse);
+        }
     }
 
     private Vector2 Rotate(Vector2 source, float degrees)
