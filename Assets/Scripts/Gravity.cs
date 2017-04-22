@@ -12,14 +12,40 @@ public class Gravity : MonoBehaviour
 
     void Update()
     {
-        var self = this.gameObject.transform.position;
+        var selfPosition = GetSelfPosition2d();
+        var selfRadius = GetSelfRadius();
+
         var player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
+        var items = GameObject.FindGameObjectsWithTag("Item");
 
-        var vector2 = new Vector2(self.x, self.y);
+        AddGravityForce(player, selfPosition, selfRadius);
 
-        var difference = vector2 - player.position;
-        var percent = Mathf.Min(1, Mathf.Exp(difference.magnitude * (-1f / GravityRange)));
+        foreach (var item in items)
+        {
+            var body = item.GetComponent<Rigidbody2D>();
+            AddGravityForce(body, selfPosition, selfRadius);
+        }
+    }
 
-        player.AddForce(difference.normalized * GravityPower * percent, ForceMode2D.Force);
+    private Vector2 GetSelfPosition2d()
+    {
+        var selfPosition = this.gameObject.transform.position;
+        return new Vector2(selfPosition.x, selfPosition.y);
+    }
+
+    private float GetSelfRadius()
+    {
+        return GetComponent<CircleCollider2D>().radius;
+    }
+
+    private void AddGravityForce(Rigidbody2D body, Vector2 selfPosition, float selfRadius)
+    {
+        var differenceFromCore = (selfPosition - body.position);
+        var distanceFromSurface = differenceFromCore.magnitude - selfRadius;
+
+        var percent = Mathf.Min(1, Mathf.Exp(distanceFromSurface * (-1f / GravityRange)));
+        //Debug.Log(string.Format("from core {0}, from surface {1}, percent {2}", differenceFromCore.magnitude, distanceFromSurface, percent));
+
+        body.AddForce(differenceFromCore.normalized * GravityPower * percent, ForceMode2D.Force);
     }
 }
