@@ -4,24 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | Small World</title>
-    <link rel="stylesheet" href="Release/TemplateData/style.css">
-    <link rel="shortcut icon" href="Release/TemplateData/favicon.ico" />
-    <script src="Release/TemplateData/UnityProgress.js"></script>
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <link rel="shortcut icon" href="TemplateData/favicon.ico" />
+    <script src="TemplateData/UnityProgress.js"></script>
   </head>
   <body class="template">
     <div class="template-wrap clear">
       <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" height="600px" width="960px"></canvas>
       <br>
       <div class="logo"></div>
-      <div class="fullscreen"><img src="Release/TemplateData/fullscreen.png" width="38" height="38" alt="Fullscreen" title="Fullscreen" onclick="SetFullscreen(1);" /></div>
+      <div class="fullscreen"><img src="TemplateData/fullscreen.png" width="38" height="38" alt="Fullscreen" title="Fullscreen" onclick="SetFullscreen(1);" /></div>
       <div class="title">Small World</div>
-    </div>
-	<div>
-		<ul>
-		  <li>Arrow keys to fly around.</li>
-		  <li>Click anywhere to place a block.</li>
-		  <li>Mouse wheel to zoom in and out</li>
-		</ul>
     </div>
     <script type='text/javascript'>
   var Module = {
@@ -30,13 +23,13 @@
     compatibilitycheck: null,
     backgroundColor: "#222C36",
     splashStyle: "Light",
-    dataUrl: "Release/Release/Release.data",
-    codeUrl: "Release/Release/Release.js",
-    asmUrl: "Release/Release/Release.asm.js",
-    memUrl: "Release/Release/Release.mem",
+    dataUrl: "Release/Release.data",
+    codeUrl: "Release/Release.js",
+    asmUrl: "Release/Release.asm.js",
+    memUrl: "Release/Release.mem",
   };
 </script>
-<script src="Release/Release/UnityLoader.js"></script>
+<script src="Release/UnityLoader.js"></script>
 
   </body>
 </html>
