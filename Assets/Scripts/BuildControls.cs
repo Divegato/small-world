@@ -5,20 +5,20 @@ public class BuildControls : MonoBehaviour
 {
     public GameObject Spawn;
 
-    private int blockCount = 0;
+    public int BlockCount = 0;
 
     void Start()
     {
-        blockCount = 0;
+        BlockCount = 0;
     }
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (blockCount > 0)
+            if (BlockCount > 0)
             {
-                blockCount--;
+                BlockCount--;
                 var mousePoint = Input.mousePosition;
                 mousePoint.z = 10f;
                 var target = Camera.main.ScreenToWorldPoint(mousePoint);
@@ -35,7 +35,7 @@ public class BuildControls : MonoBehaviour
             if (hit && hit.transform.localScale.x * hit.transform.localScale.y <= 1.5 && hit.transform.tag == "Item")
             {
                 Destroy(hit.transform.gameObject);
-                blockCount++;
+                BlockCount++;
             }
         }
     }

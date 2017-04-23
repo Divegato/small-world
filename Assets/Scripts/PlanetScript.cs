@@ -121,7 +121,7 @@ public class PlanetScript : MonoBehaviour
     {
         var block = Spawner.BuildBlock(GetRandomBlock(), position);
         block.transform.localScale = new Vector3(blockSize, blockSize, blockSize);
-        block.GetComponent<Rigidbody2D>().mass = Mathf.Pow(blockSize, 2);
+        block.GetComponent<Rigidbody2D>().mass = Mathf.Pow(blockSize, 3);
 
         return block;
     }
