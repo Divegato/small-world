@@ -21,7 +21,8 @@ public class SelfLevelingController : MonoBehaviour
             .OrderBy(x => x.magnitude)
             .FirstOrDefault();
 
-        gameObject.transform.up = Vector3.RotateTowards(gameObject.transform.up, closestPlanet, MaxRotateAngle, MaxRotateMagnitude);
+        var targetVector = Vector3.RotateTowards(gameObject.transform.up, closestPlanet, MaxRotateAngle, MaxRotateMagnitude);
+        gameObject.transform.up = new Vector3(targetVector.x, targetVector.y);
 
         // Find planet with the strongest gravity effect (or maybe the average gravity effect?)
 

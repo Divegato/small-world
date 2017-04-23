@@ -27,8 +27,8 @@ public class AsteroidsSpawner : MonoBehaviour
     {
         var selfSize = GetComponent<Renderer>().bounds;
 
-        var x = (Random.value > .5 ? -1 : 0) * selfSize.extents.x;
-        var y = (Random.value > .5 ? -1 : 0) * selfSize.extents.y;
+        var x = (Random.value > .5 ? -1 : 1) * selfSize.extents.x;
+        var y = (Random.value > .5 ? -1 : 1) * selfSize.extents.y;
 
         var position = new Vector3(x, y, 0);
 
