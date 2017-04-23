@@ -25,10 +25,12 @@ public class AsteroidsSpawner : MonoBehaviour
 
     private void SpawnAsteroid()
     {
-        var selfSize = GetComponent<Renderer>().bounds;
+        var selfSize = gameObject.transform;
 
-        var x = (Random.value > .5 ? -1 : 1) * selfSize.extents.x;
-        var y = (Random.value > .5 ? -1 : 1) * selfSize.extents.y;
+        var angle = Random.value * Mathf.PI * 2;
+
+        var x = Mathf.Cos(angle) * selfSize.localScale.x / 2;
+        var y = Mathf.Sin(angle) * selfSize.localScale.y / 2;
 
         var position = new Vector3(x, y, 0);
 
