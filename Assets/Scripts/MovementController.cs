@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Helpers;
+using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
@@ -10,10 +11,13 @@ public class MovementController : MonoBehaviour
     public KeyCode JumpKey = KeyCode.Space;
 
     public float JumpPower = 10f;
+    public float MaxEnergy = 10f;
+
+    private float energy;
 
     void Start()
     {
-
+        energy = MaxEnergy;
     }
 
     void Update()
@@ -38,11 +42,31 @@ public class MovementController : MonoBehaviour
             direction = Rotate(body.transform.up, -90);
         }
 
-        body.AddForce(direction / 5, ForceMode2D.Impulse);
+        Physics2D.OverlapArea(body.transform.up, body.transform.up);
+
+        if (direction.magnitude > 0)
+        {
+            if (Environment.IsGrounded(gameObject))
+            {
+                body.AddForce(direction / 5, ForceMode2D.Impulse);
+            }
+            //else if (energy > 0)
+            //{
+            //    energy -= 0.1f;
+            //    body.AddForce(direction / 5, ForceMode2D.Impulse);
+            //}
+        }
+        else
+        {
+            energy += 0.1f;
+        }
 
         if (Input.GetKeyDown(this.JumpKey))
         {
-            body.AddForce(body.transform.up * JumpPower, ForceMode2D.Impulse);
+            if (Environment.IsGrounded(gameObject))
+            {
+                body.AddForce(body.transform.up * JumpPower, ForceMode2D.Impulse);
+            }
         }
     }
 
