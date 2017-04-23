@@ -15,10 +15,13 @@ public class Gravity : MonoBehaviour
         var selfPosition = GetSelfPosition2d();
         var selfRadius = GetSelfRadius();
 
-        var player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
+        var player = GameObject.FindGameObjectWithTag("Player");
         var items = GameObject.FindGameObjectsWithTag("Item");
 
-        AddGravityForce(player, selfPosition, selfRadius);
+        if (player != null)
+        {
+            AddGravityForce(player.GetComponent<Rigidbody2D>(), selfPosition, selfRadius);
+        }
 
         foreach (var item in items)
         {
