@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class SelfLevelingController : MonoBehaviour
 {
-    public float MaxRotateAngle = 0.02f;
-    public float MaxRotateMagnitude = 0.02f;
+    public float MaxRotateAngle = 0.25f;
 
     void Start()
     {
@@ -13,19 +12,18 @@ public class SelfLevelingController : MonoBehaviour
 
     void Update()
     {
-        var planets = GameObject.FindGameObjectsWithTag("Planet");
-
-        //For starters we'll just use closest planet
-        var closestPlanet = planets
-            .Select(x => gameObject.transform.position - x.transform.position)
-            .OrderBy(x => x.magnitude)
+        var closestPlanet = GameObject
+            .FindGameObjectsWithTag("Planet")
+            .Select(x => new
+            {
+                Vector = gameObject.transform.position - x.transform.position,
+                Planet = x
+            })
+            .OrderBy(x => x.Vector.magnitude - x.Planet.GetComponent<CircleCollider2D>().radius)
             .FirstOrDefault();
 
-        var targetVector = Vector3.RotateTowards(gameObject.transform.up, closestPlanet, MaxRotateAngle, MaxRotateMagnitude);
-        gameObject.transform.up = new Vector3(targetVector.x, targetVector.y);
+        var targetVector = Vector3.RotateTowards(gameObject.transform.up, closestPlanet.Vector, MaxRotateAngle, Mathf.Infinity);
 
-        // Find planet with the strongest gravity effect (or maybe the average gravity effect?)
-
-        // Apply a light rotational force so up is opposite to that gravitational force
+        gameObject.transform.up = new Vector3(targetVector.x, targetVector.y).normalized;
     }
 }

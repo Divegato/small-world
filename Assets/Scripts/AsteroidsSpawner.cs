@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Helpers;
+using UnityEngine;
 
 public class AsteroidsSpawner : MonoBehaviour
 {
@@ -25,19 +26,14 @@ public class AsteroidsSpawner : MonoBehaviour
 
     private void SpawnAsteroid()
     {
-        var selfSize = gameObject.transform;
+        var radius = gameObject.transform.localScale.y / 2;
+        var position = Geometry.GetRandomPointOnCircle(radius);
 
-        var angle = Random.value * Mathf.PI * 2;
-
-        var x = Mathf.Cos(angle) * selfSize.localScale.x / 2;
-        var y = Mathf.Sin(angle) * selfSize.localScale.y / 2;
-
-        var position = new Vector3(x, y, 0);
-
+        var force = (Random.value * 10f) + 5f;
+        var trajectory = Geometry.GetRandomPointOnCircle(force);
         var result = Instantiate(Asteroid, position, Quaternion.identity);
         var body = result.GetComponent<Rigidbody2D>();
 
-        var randomVelocity = (Random.value * 10f) + 5f;
-        body.AddForce(Random.insideUnitCircle * randomVelocity, ForceMode2D.Impulse);
+        body.AddForce(trajectory, ForceMode2D.Impulse);
     }
 }

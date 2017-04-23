@@ -1,21 +1,30 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Helpers;
+using UnityEngine;
 
 public class BuildControls : MonoBehaviour
 {
     public GameObject Spawn;
 
+    private int blockCount = 0;
+
     void Start()
     {
-
+        blockCount = 0;
     }
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            var mousePoint = Input.mousePosition;
-            mousePoint.z = 10f;
-            Instantiate(Spawn, Camera.main.ScreenToWorldPoint(mousePoint), Quaternion.identity);
+            if (blockCount > 0)
+            {
+                blockCount--;
+                var mousePoint = Input.mousePosition;
+                mousePoint.z = 10f;
+                var target = Camera.main.ScreenToWorldPoint(mousePoint);
+
+                Spawner.BuildBlock(Spawn, target);
+            }
         }
 
         if (Input.GetMouseButtonDown(1))
@@ -26,7 +35,7 @@ public class BuildControls : MonoBehaviour
             if (hit && hit.transform.localScale.x * hit.transform.localScale.y <= 1.5 && hit.transform.tag == "Item")
             {
                 Destroy(hit.transform.gameObject);
-                // Add to inventory
+                blockCount++;
             }
         }
     }

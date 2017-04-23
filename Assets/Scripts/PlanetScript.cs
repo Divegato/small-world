@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Helpers;
+using UnityEngine;
 
 public class PlanetScript : MonoBehaviour
 {
@@ -118,12 +119,9 @@ public class PlanetScript : MonoBehaviour
 
     private GameObject GenerateBlock(Vector3 position, float blockSize)
     {
-        var block = Instantiate(GetRandomBlock(), position, Quaternion.identity);
+        var block = Spawner.BuildBlock(GetRandomBlock(), position);
         block.transform.localScale = new Vector3(blockSize, blockSize, blockSize);
-        //Debug.Log(position);
-        //Debug.Log(blockSize);
-        // Set Mass
-        // Attach Rigidbody
+        block.GetComponent<Rigidbody2D>().mass = Mathf.Pow(blockSize, 2);
 
         return block;
     }
