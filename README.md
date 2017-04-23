@@ -2,6 +2,7 @@
 Ludum Dare 48 Compo
 
 ## Controls
-* Arrow keys to fly around.
+* WASD keys to fly around.
+* Spacebar to jump.
 * Click anywhere to place a block.
-* Mouse wheel to zoom in and out
+* Mouse wheel to zoom in and out.
