@@ -27,19 +27,19 @@ public class MovementController : MonoBehaviour
 
         if (Input.GetKey(this.UpKey))
         {
-            direction = body.transform.up;
+            direction += new Vector2(body.transform.up.x, body.transform.up.y);
         }
         if (Input.GetKey(this.DownKey))
         {
-            direction = body.transform.up * -1f;
+            direction += new Vector2(body.transform.up.x, body.transform.up.y) * -1f;
         }
         if (Input.GetKey(this.LeftKey))
         {
-            direction = Rotate(body.transform.up, 90);
+            direction += Rotate(body.transform.up, 90);
         }
         if (Input.GetKey(this.RightKey))
         {
-            direction = Rotate(body.transform.up, -90);
+            direction += Rotate(body.transform.up, -90);
         }
 
         Physics2D.OverlapArea(body.transform.up, body.transform.up);
@@ -48,7 +48,8 @@ public class MovementController : MonoBehaviour
         {
             if (Environment.IsGrounded(gameObject))
             {
-                body.AddForce(direction / 5, ForceMode2D.Impulse);
+                body.velocity = (body.velocity + (direction.normalized * 10)) / 2;
+                // body.AddForce(direction / 5, ForceMode2D.Impulse);
             }
             //else if (energy > 0)
             //{

@@ -2,8 +2,8 @@
 
 public class Gravity : MonoBehaviour
 {
-    public float GravityPower = 1;
-    public float GravityRange = 10;
+    public float GravityPower = 8;
+    public float GravityRange = 8;
 
     void Start()
     {
@@ -12,22 +12,19 @@ public class Gravity : MonoBehaviour
 
     void Update()
     {
-        var selfPosition = GetSelfPosition2d();
-        var selfRadius = GetSelfRadius();
+        //var player = GameObject.FindGameObjectWithTag("Player");
+        //var items = GameObject.FindGameObjectsWithTag("Item");
 
-        var player = GameObject.FindGameObjectWithTag("Player");
-        var items = GameObject.FindGameObjectsWithTag("Item");
+        //if (player != null)
+        //{
+        //    AddGravityForce(player.GetComponent<Rigidbody2D>());
+        //}
 
-        if (player != null)
-        {
-            AddGravityForce(player.GetComponent<Rigidbody2D>(), selfPosition, selfRadius);
-        }
-
-        foreach (var item in items)
-        {
-            var body = item.GetComponent<Rigidbody2D>();
-            AddGravityForce(body, selfPosition, selfRadius);
-        }
+        //foreach (var item in items)
+        //{
+        //    var body = item.GetComponent<Rigidbody2D>();
+        //    AddGravityForce(body);
+        //}
     }
 
     private Vector2 GetSelfPosition2d()
@@ -38,17 +35,26 @@ public class Gravity : MonoBehaviour
 
     private float GetSelfRadius()
     {
-        return GetComponent<CircleCollider2D>().radius;
+        return gameObject.transform.localScale.x;
+        // GetComponent<CircleCollider2D>().radius;
     }
 
-    private void AddGravityForce(Rigidbody2D body, Vector2 selfPosition, float selfRadius)
+    private void AddGravityForce(Rigidbody2D body)
     {
-        var differenceFromCore = (selfPosition - body.position);
+        var force = GetForce(body);
+        body.AddForce(force, ForceMode2D.Force);
+    }
+
+    public Vector2 GetForce(Rigidbody2D target)
+    {
+        var selfPosition = GetSelfPosition2d();
+        var selfRadius = GetSelfRadius();
+
+        var differenceFromCore = (selfPosition - target.position);
         var distanceFromSurface = differenceFromCore.magnitude - selfRadius;
-
         var percent = Mathf.Min(1, Mathf.Exp(distanceFromSurface * (-1f / GravityRange)));
-        //Debug.Log(string.Format("from core {0}, from surface {1}, percent {2}", differenceFromCore.magnitude, distanceFromSurface, percent));
+        var force = differenceFromCore.normalized * (GravityPower / 8) * percent;
 
-        body.AddForce(differenceFromCore.normalized * GravityPower * percent, ForceMode2D.Force);
+        return force;
     }
 }

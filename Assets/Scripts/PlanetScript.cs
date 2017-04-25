@@ -89,11 +89,18 @@ public class PlanetScript : MonoBehaviour
                     var gx = gameObject.transform.position.x;
                     var gy = gameObject.transform.position.y;
 
-                    GenerateBlock(new Vector3(gx + x + s / 2, gy + y + s / 2, 0), s);
-                    GenerateBlock(new Vector3(gx + -1 * (x + s / 2), gy + y + s / 2, 0), s);
-                    GenerateBlock(new Vector3(gx + x + s / 2, gy + -1 * (y + s / 2), 0), s);
-                    GenerateBlock(new Vector3(gx + -1 * (x + s / 2), gy + -1 * (y + s / 2), 0), s);
-
+                    if (x == 0 && y == 0)
+                    {
+                        // Generate the core
+                        GenerateBlock(new Vector3(gx, gy, 0), s * 2);
+                    }
+                    else
+                    {
+                        GenerateBlock(new Vector3(gx + x + s / 2, gy + y + s / 2, 0), s);
+                        GenerateBlock(new Vector3(gx + -1 * (x + s / 2), gy + y + s / 2, 0), s);
+                        GenerateBlock(new Vector3(gx + x + s / 2, gy + -1 * (y + s / 2), 0), s);
+                        GenerateBlock(new Vector3(gx + -1 * (x + s / 2), gy + -1 * (y + s / 2), 0), s);
+                    }
                     // Mark tiles as added
                     for (int bx = x; bx < s + x; bx++)
                     {
@@ -119,9 +126,17 @@ public class PlanetScript : MonoBehaviour
 
     private GameObject GenerateBlock(Vector3 position, float blockSize)
     {
-        var block = Spawner.BuildBlock(GetRandomBlock(), position);
+        var block = Spawner.BuildBlock(GetRandomBlock(), position, false);
         block.transform.localScale = new Vector3(blockSize, blockSize, blockSize);
-        block.GetComponent<Rigidbody2D>().mass = Mathf.Pow(blockSize, 3);
+        var body = block.GetComponent<Rigidbody2D>();
+        body.mass = Mathf.Pow(blockSize, 3);
+
+        if (blockSize >= 8)
+        {
+            var gravity = block.AddComponent<Gravity>();
+            gravity.GravityRange = blockSize;
+            gravity.GravityPower = blockSize;
+        }
 
         return block;
     }

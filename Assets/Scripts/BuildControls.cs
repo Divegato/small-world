@@ -9,7 +9,7 @@ public class BuildControls : MonoBehaviour
 
     void Start()
     {
-        BlockCount = 0;
+        BlockCount = 100;
     }
 
     void Update()

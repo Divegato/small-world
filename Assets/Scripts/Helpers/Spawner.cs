@@ -5,7 +5,7 @@ namespace Assets.Scripts.Helpers
 {
     public static class Spawner
     {
-        public static GameObject BuildBlock(GameObject block, Vector3 target)
+        public static GameObject BuildBlock(GameObject block, Vector3 target, bool weld = true)
         {
             var closest = GameObject
                 .FindGameObjectsWithTag("Item")
@@ -20,13 +20,16 @@ namespace Assets.Scripts.Helpers
             {
                 var newItem = Object.Instantiate(block, target, Quaternion.identity);
 
-                foreach (var otherItem in closest)
+                if (weld)
                 {
-                    var joint = newItem.AddComponent<FixedJoint2D>();
-                    joint.autoConfigureConnectedAnchor = true;
-                    joint.connectedBody = otherItem.Item.GetComponent<Rigidbody2D>();
-                    joint.breakForce = 400;
-                    joint.breakTorque = 300;
+                    foreach (var otherItem in closest)
+                    {
+                        var joint = newItem.AddComponent<FixedJoint2D>();
+                        joint.autoConfigureConnectedAnchor = true;
+                        joint.connectedBody = otherItem.Item.GetComponent<Rigidbody2D>();
+                        joint.breakForce = 400;
+                        joint.breakTorque = 300;
+                    }
                 }
 
                 return newItem;
