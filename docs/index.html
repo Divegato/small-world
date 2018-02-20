@@ -1,20 +1,25 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | Small World</title>
-    <link rel="stylesheet" href="Release/TemplateData/style.css">
-    <link rel="shortcut icon" href="Release/TemplateData/favicon.ico" />
-    <script src="Release/TemplateData/UnityProgress.js"></script>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="TemplateData/UnityProgress.js"></script>  
+    <script src="Build/UnityLoader.js"></script>
+    <script>
+      var gameInstance = UnityLoader.instantiate("gameContainer", "Build/Temp.json", {onProgress: UnityProgress});
+    </script>
   </head>
-  <body class="template">
-    <div class="template-wrap clear">
-      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" height="600px" width="960px"></canvas>
-      <br>
-      <div class="logo"></div>
-      <div class="fullscreen"><img src="Release/TemplateData/fullscreen.png" width="38" height="38" alt="Fullscreen" title="Fullscreen" onclick="SetFullscreen(1);" /></div>
-      <div class="title">Small World</div>
+  <body>
+    <div class="webgl-content">
+      <div id="gameContainer" style="width: 960px; height: 600px"></div>
+      <div class="footer">
+        <div class="webgl-logo"></div>
+        <div class="fullscreen" onclick="gameInstance.SetFullscreen(1)"></div>
+        <div class="title">Small World</div>
+      </div>
     </div>
 	<div>
 		<ul>
@@ -26,20 +31,5 @@
 		  <li><a href="https://trello.com/b/kvwv4q8m/ludum-dare-38">Plans for features</a></li>
 		</ul>
     </div>
-    <script type='text/javascript'>
-  var Module = {
-    TOTAL_MEMORY: 268435456,
-    errorhandler: null,			// arguments: err, url, line. This function must return 'true' if the error is handled, otherwise 'false'
-    compatibilitycheck: null,
-    backgroundColor: "#222C36",
-    splashStyle: "Light",
-    dataUrl: "Release/Release/Release.data",
-    codeUrl: "Release/Release/Release.js",
-    asmUrl: "Release/Release/Release.asm.js",
-    memUrl: "Release/Release/Release.mem",
-  };
-</script>
-<script src="Release/Release/UnityLoader.js"></script>
-
   </body>
 </html>
