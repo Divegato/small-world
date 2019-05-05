@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Helpers;
+﻿using System.Linq;
+using Assets.Scripts.Helpers;
 using UnityEngine;
 
 public class MovementController : MonoBehaviour
@@ -23,6 +24,7 @@ public class MovementController : MonoBehaviour
     void Update()
     {
         var body = GetComponent<Rigidbody2D>();
+        var collider = GetComponent<Collider2D>();
         var direction = Vector2.zero;
 
         if (Input.GetKey(this.UpKey))
@@ -46,16 +48,15 @@ public class MovementController : MonoBehaviour
 
         if (direction.magnitude > 0)
         {
-            if (Environment.IsGrounded(gameObject))
+            var nearby = Environment.GetNearbyBlocks(collider);
+            if (nearby.Any())
             {
                 body.velocity = (body.velocity + (direction.normalized * 10)) / 2;
-                // body.AddForce(direction / 5, ForceMode2D.Impulse);
+                foreach (var block in nearby)
+                {
+                    block.attachedRigidbody.AddForce(direction.normalized * (-100f / nearby.Length));
+                }
             }
-            //else if (energy > 0)
-            //{
-            //    energy -= 0.1f;
-            //    body.AddForce(direction / 5, ForceMode2D.Impulse);
-            //}
         }
         else
         {
