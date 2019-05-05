@@ -126,16 +126,21 @@ public class PlanetScript : MonoBehaviour
 
     private GameObject GenerateBlock(Vector3 position, float blockSize)
     {
-        var block = Spawner.BuildBlock(GetRandomBlock(), position, false);
-        block.transform.localScale = new Vector3(blockSize, blockSize, blockSize);
-        var body = block.GetComponent<Rigidbody2D>();
-        body.mass = Mathf.Pow(blockSize, 3);
+        var template = GetRandomBlock();
+        template.transform.localScale = new Vector3(blockSize, blockSize, blockSize);
 
-        if (blockSize >= 8)
+        var block = Spawner.BuildBlock(template, position, true);
+        if (block)
         {
-            var gravity = block.AddComponent<Gravity>();
-            gravity.GravityRange = blockSize;
-            gravity.GravityPower = blockSize;
+            var body = block.GetComponent<Rigidbody2D>();
+            body.mass = Mathf.Pow(blockSize, 3);
+
+            if (blockSize >= 8)
+            {
+                var gravity = block.AddComponent<Gravity>();
+                gravity.GravityRange = blockSize;
+                gravity.GravityPower = blockSize;
+            }
         }
 
         return block;

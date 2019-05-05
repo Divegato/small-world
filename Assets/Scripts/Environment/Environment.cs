@@ -17,7 +17,7 @@ namespace Assets.Scripts.Helpers
             var result = Physics2D.OverlapCircleAll(target.transform.position, 5);
 
             var closest = result
-                .Where(x => x.tag != "Player")
+                .Where(x => x.tag == "Item")
                 .OrderBy(t => (t.Distance(target).distance)).FirstOrDefault();
 
             return closest;
@@ -25,11 +25,12 @@ namespace Assets.Scripts.Helpers
 
         public static Collider2D[] GetNearbyBlocks(Collider2D target, float radius = 5)
         {
-            var result = Physics2D.OverlapCircleAll(target.transform.position, 5);
-
-            return result
-                .Where(x => x.tag != "Player")
+            var result = Physics2D
+                .OverlapCircleAll(target.transform.position, 5)
+                .Where(x => x.tag == "Item")
                 .ToArray();
+
+            return result;
         }
 
         public static Vector2 GetAverageGravitationalForce(Rigidbody2D target)
