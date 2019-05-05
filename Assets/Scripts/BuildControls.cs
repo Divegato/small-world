@@ -18,12 +18,15 @@ public class BuildControls : MonoBehaviour
         {
             if (BlockCount > 0)
             {
-                BlockCount--;
                 var mousePoint = Input.mousePosition;
                 mousePoint.z = 10f;
                 var target = Camera.main.ScreenToWorldPoint(mousePoint);
 
-                Spawner.BuildBlock(Spawn, target);
+                if (Vector3.Distance(target, gameObject.transform.position) < 5)
+                {
+                    BlockCount--;
+                    Spawner.BuildBlock(Spawn, target);
+                }
             }
         }
 
