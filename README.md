@@ -1,5 +1,5 @@
 # small-world
-Ludum Dare 48 Compo
+Ludum Dare 38 Compo
 
 ## Controls
 * WASD keys to fly around.
