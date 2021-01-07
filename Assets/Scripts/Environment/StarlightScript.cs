@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class StarlightScript : MonoBehaviour
 {
+    public GameObject Star;
     public GameObject Starlight;
     public float Radius = 10000;
     public float Quantity = 100;
