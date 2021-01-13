@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
 public class Gravity : MonoBehaviour
 {
@@ -56,5 +57,10 @@ public class Gravity : MonoBehaviour
         var force = differenceFromCore.normalized * (GravityPower / 8) * percent;
 
         return force;
+    }
+
+    void OnDrawGizmos()
+    {
+        Handles.Label(transform.position, GravityPower.ToString());
     }
 }

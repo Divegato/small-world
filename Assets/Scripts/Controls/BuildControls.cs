@@ -42,4 +42,19 @@ public class BuildControls : MonoBehaviour
             }
         }
     }
+
+    private void ThreeDExample()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            var hit = Physics.Raycast(ray, out var hitInfo);
+
+            if (hit && hitInfo.transform.localScale.x * hitInfo.transform.localScale.y <= 1.5 && hitInfo.transform.tag == "Item")
+            {
+                Destroy(hitInfo.transform.gameObject);
+                BlockCount++;
+            }
+        }
+    }
 }

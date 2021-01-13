@@ -5,14 +5,44 @@ public class PlanetScript : MonoBehaviour
 {
     public GameObject[] Blocks;
 
+    private int MinSizeForGravity = 2;
+
     private int[,] Tiles;
 
     void Start()
     {
+        GenerateFractalCubePlanet();
+    }
+
+    void GenerateSingleObjectPlanet()
+    {
+        // TODO
+        GenerateShape();
+    }
+
+    void GenerateRandomBlocksPlanet()
+    {
         var collider = GetComponent<CircleCollider2D>();
 
         var radius = Mathf.FloorToInt(collider.radius);
+
         var blockSize = GetMaxBlockSize(radius);
+
+        for (int i = 0; i < radius * 2; i++)
+        {
+            var point = Geometry.GetRandomPointOnCircle(radius * UnityEngine.Random.Range(0, 100));
+            GenerateBlock(point, UnityEngine.Random.Range(1, blockSize));
+        }
+    }
+
+    void GenerateFractalCubePlanet()
+    {
+        var collider = GetComponent<CircleCollider2D>();
+
+        var radius = Mathf.FloorToInt(collider.radius);
+
+        var blockSize = GetMaxBlockSize(radius);
+
         Tiles = new int[radius, radius];
 
         Tiles = CalculateQuadrant(radius, blockSize);
@@ -124,6 +154,16 @@ public class PlanetScript : MonoBehaviour
         return Blocks[UnityEngine.Random.Range(0, this.Blocks.Length)];
     }
 
+    private GameObject GenerateShape()
+    {
+        var shape = new GameObject();
+        var collider = shape.AddComponent<PolygonCollider2D>();
+
+        // TODO
+
+        return shape;
+    }
+
     private GameObject GenerateBlock(Vector3 position, float blockSize)
     {
         var template = GetRandomBlock();
@@ -135,7 +175,7 @@ public class PlanetScript : MonoBehaviour
             var body = block.GetComponent<Rigidbody2D>();
             body.mass = Mathf.Pow(blockSize, 3);
 
-            if (blockSize >= 8)
+            if (blockSize >= MinSizeForGravity)
             {
                 var gravity = block.AddComponent<Gravity>();
                 gravity.GravityRange = blockSize;
