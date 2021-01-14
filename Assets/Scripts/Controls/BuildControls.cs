@@ -33,12 +33,19 @@ public class BuildControls : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            var hit = Physics2D.Raycast(ray.origin, ray.direction, 1000);
+            var results = new RaycastHit2D[5];
+            var hits = Physics2D.Raycast(ray.origin, ray.direction, new ContactFilter2D(), results);
 
-            if (hit && hit.transform.localScale.x * hit.transform.localScale.y <= 1.5 && hit.transform.tag == "Item")
+            if (hits > 0)
             {
-                Destroy(hit.transform.gameObject);
-                BlockCount++;
+                foreach (var hit in results)
+                {
+                    if (hit && hit.transform.localScale.x * hit.transform.localScale.y <= 1.5 && hit.transform.tag == "Item")
+                    {
+                        Destroy(hit.transform.gameObject);
+                        BlockCount++;
+                    }
+                }
             }
         }
     }

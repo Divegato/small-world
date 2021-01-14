@@ -356,6 +356,12 @@ PrefabInstance:
       propertyPath: StartVelocity.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114884400863240024, guid: c3824d3e8f67b294d91f0869c1da2864,
+        type: 3}
+      propertyPath: PlanetSpriteShape
+      value: 
+      objectReference: {fileID: 11400000, guid: fd15713e867d5184ea9caa7e425969da,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3824d3e8f67b294d91f0869c1da2864, type: 3}
 --- !u!1001 &537600530
@@ -443,6 +449,12 @@ PrefabInstance:
       propertyPath: StartVelocity.y
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 114884400863240024, guid: c3824d3e8f67b294d91f0869c1da2864,
+        type: 3}
+      propertyPath: PlanetSpriteShape
+      value: 
+      objectReference: {fileID: 11400000, guid: fd15713e867d5184ea9caa7e425969da,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3824d3e8f67b294d91f0869c1da2864, type: 3}
 --- !u!1 &544408714
@@ -845,6 +857,12 @@ PrefabInstance:
       propertyPath: StartVelocity.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114884400863240024, guid: c3824d3e8f67b294d91f0869c1da2864,
+        type: 3}
+      propertyPath: PlanetSpriteShape
+      value: 
+      objectReference: {fileID: 11400000, guid: fd15713e867d5184ea9caa7e425969da,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3824d3e8f67b294d91f0869c1da2864, type: 3}
 --- !u!1001 &1731381693
@@ -927,6 +945,12 @@ PrefabInstance:
       propertyPath: StartVelocity.y
       value: -2
       objectReference: {fileID: 0}
+    - target: {fileID: 114884400863240024, guid: c3824d3e8f67b294d91f0869c1da2864,
+        type: 3}
+      propertyPath: PlanetSpriteShape
+      value: 
+      objectReference: {fileID: 11400000, guid: fd15713e867d5184ea9caa7e425969da,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3824d3e8f67b294d91f0869c1da2864, type: 3}
 --- !u!1 &1866900329
@@ -5987,6 +6011,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1536815753622982, guid: 37134261ec897c54a99bc2ae5b2476f5,
         type: 3}
+    - target: {fileID: 114884400863240024, guid: c3824d3e8f67b294d91f0869c1da2864,
+        type: 3}
+      propertyPath: PlanetSpriteShape
+      value: 
+      objectReference: {fileID: 11400000, guid: fd15713e867d5184ea9caa7e425969da,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3824d3e8f67b294d91f0869c1da2864, type: 3}
 --- !u!1001 &1215873479710778474

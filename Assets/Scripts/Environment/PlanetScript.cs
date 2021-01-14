@@ -1,8 +1,12 @@
 ﻿using Assets.Scripts.Helpers;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
+using UnityEngine.U2D;
 
 public class PlanetScript : MonoBehaviour
 {
+    public SpriteShape PlanetSpriteShape;
+
     public GameObject[] Blocks;
 
     private int MinSizeForGravity = 2;
@@ -11,13 +15,14 @@ public class PlanetScript : MonoBehaviour
 
     void Start()
     {
-        GenerateFractalCubePlanet();
+        GenerateSingleObjectPlanet();
     }
 
     void GenerateSingleObjectPlanet()
     {
-        // TODO
-        GenerateShape();
+        var collider = GetComponent<CircleCollider2D>();
+        var radius = Mathf.FloorToInt(collider.radius);
+        GenerateShape(radius, 100, 0.1f);
     }
 
     void GenerateRandomBlocksPlanet()
@@ -154,12 +159,39 @@ public class PlanetScript : MonoBehaviour
         return Blocks[UnityEngine.Random.Range(0, this.Blocks.Length)];
     }
 
-    private GameObject GenerateShape()
+    private GameObject GenerateShape(float radius, int granularity, float variationPercent)
     {
-        var shape = new GameObject();
-        var collider = shape.AddComponent<PolygonCollider2D>();
+        var shape = gameObject;
 
-        // TODO
+        var renderer = shape.AddComponent<SpriteShapeRenderer>();
+        var shapeController = shape.AddComponent<SpriteShapeController>();
+        var shapeCollider = shape.AddComponent<PolygonCollider2D>();
+        var gravity = shape.AddComponent<Gravity>();
+        var shadow = shape.AddComponent<ShadowCaster2D>();
+        var area = Mathf.PI * Mathf.Pow(radius, 2);
+        var permimeter = 2 * Mathf.PI * radius;
+
+        shapeController.spriteShape = PlanetSpriteShape;
+        shapeController.splineDetail = granularity;
+        shapeController.enableTangents = true;
+        gravity.GravityRange = permimeter;
+        gravity.GravityPower = permimeter;
+
+        var points = new Vector2[granularity];
+        for (int i = 0; i < granularity; i++)
+        {
+            var angle = 2 * Mathf.PI / granularity * i;
+            var variation = variationPercent * radius / 2;
+            var length = (radius + UnityEngine.Random.Range(variation * -1, variation));
+
+            var x = Mathf.Cos(angle) * length;
+            var y = Mathf.Sin(angle) * length;
+
+            shapeController.spline.InsertPointAt(i, new Vector2(x, y));
+            points[i] = new Vector2(x, y);
+        }
+        shapeCollider.points = points;
+        shadow.useRendererSilhouette = true;
 
         return shape;
     }

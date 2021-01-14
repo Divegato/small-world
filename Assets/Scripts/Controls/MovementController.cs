@@ -54,7 +54,10 @@ public class MovementController : MonoBehaviour
                 body.velocity = (body.velocity + (direction.normalized * 10)) / 2;
                 foreach (var block in nearby)
                 {
-                    block.attachedRigidbody.AddForce(direction.normalized * (-100f / nearby.Length));
+                    if (block.attachedRigidbody)
+                    {
+                        block.attachedRigidbody.AddForce(direction.normalized * (-100f / nearby.Length));
+                    }
                 }
             }
         }

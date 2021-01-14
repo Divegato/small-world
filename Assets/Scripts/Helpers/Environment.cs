@@ -27,7 +27,7 @@ namespace Assets.Scripts.Helpers
         {
             var result = Physics2D
                 .OverlapCircleAll(target.transform.position, 5)
-                .Where(x => x.tag == "Item")
+                .Where(x => x.tag == "Item" || x.tag == "Planet")
                 .ToArray();
 
             return result;
