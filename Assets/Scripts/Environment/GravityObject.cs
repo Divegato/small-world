@@ -1,9 +1,10 @@
 ﻿using Assets.Scripts.Helpers;
+using UnityEditor;
 using UnityEngine;
 
 public class GravityObject : MonoBehaviour
 {
-    public float RefreshRate = 10;
+    public float RefreshRate = 1;
 
     private float progress = 0;
     private Vector2 force;
@@ -31,8 +32,18 @@ public class GravityObject : MonoBehaviour
             color = Color.red;
         }
 
-        Debug.DrawLine(this.gameObject.transform.position, this.gameObject.transform.position + new Vector3(force.x, force.y, 0), color);
+        Debug.DrawLine(body.centerOfMass + body.position, body.centerOfMass + body.position + new Vector2(force.x, force.y) / 60, color);
 
-        body.AddForce(force, ForceMode2D.Force);
+        body.AddForce(force * Time.deltaTime, ForceMode2D.Force);
+    }
+
+    void OnDrawGizmos()
+    {
+#if DEBUG
+        if (gameObject.tag == "Player")
+        {
+            Handles.Label(transform.position, force.magnitude.ToString("n1"));
+        }
+#endif
     }
 }

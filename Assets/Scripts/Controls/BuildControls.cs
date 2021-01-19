@@ -25,7 +25,7 @@ public class BuildControls : MonoBehaviour
                 if (Vector3.Distance(target, gameObject.transform.position) < 5)
                 {
                     BlockCount--;
-                    Spawner.BuildBlock(Spawn, target);
+                    Spawner.BuildBlock(Spawn, new Vector3(target.x, target.y, 0));
                 }
             }
         }
