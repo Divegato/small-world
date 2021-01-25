@@ -48,10 +48,10 @@ public class MovementController : MonoBehaviour
 
         if (direction.magnitude > 0)
         {
-            var nearby = Environment.GetNearbyBlocks(collider);
+            var nearby = Environment.GetNearbyPlanet(collider);
+            body.velocity = (body.velocity + (direction.normalized * 10)) / 2;
             if (nearby.Any())
             {
-                body.velocity = (body.velocity + (direction.normalized * 10)) / 2;
                 foreach (var block in nearby)
                 {
                     if (block.attachedRigidbody)

@@ -23,7 +23,7 @@ namespace Assets.Scripts.Helpers
             return closest;
         }
 
-        public static Collider2D[] GetNearbyBlocks(Collider2D target, float radius = 5)
+        public static Collider2D[] GetNearbyPlanet(Collider2D target, float radius = 5)
         {
             var result = Physics2D
                 .OverlapCircleAll(target.transform.position, 5)
