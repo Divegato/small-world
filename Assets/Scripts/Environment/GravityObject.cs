@@ -27,7 +27,7 @@ public class GravityObject : MonoBehaviour
 
         if (progress >= RefreshRate)
         {
-            progress = 0;
+            progress = (Random.value * RefreshRate) - (RefreshRate / 2);
             force = Environment.GetAverageGravitationalForce(body);
             color = Color.red;
         }

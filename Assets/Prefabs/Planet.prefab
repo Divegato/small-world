@@ -9,11 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4354049412534940}
-  - component: {fileID: 58498395055612336}
   - component: {fileID: 114884400863240024}
   m_Layer: 0
   m_Name: Planet
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32,22 +31,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &58498395055612336
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1670544408951122}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 16
 --- !u!114 &114884400863240024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,5 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb83e9e96f920d4ab5c214d2b7f06a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Blocks:
-  - {fileID: 1746427371778606, guid: e76795d9b22f0fb41a2957d5d7b65a97, type: 3}
+  PlanetSpriteShape: {fileID: 11400000, guid: fd15713e867d5184ea9caa7e425969da, type: 2}
+  Radius: 100
+  RotationsPerMinute: 1

@@ -2,8 +2,8 @@
 
 public class CameraZoom : MonoBehaviour
 {
-    public float CameraSizeMin = -1000f;
-    public float CameraSizeMax = -10f;
+    public float CameraSizeMin = 5f;
+    public float CameraSizeMax = 10000f;
 
     void Start()
     {
@@ -12,9 +12,9 @@ public class CameraZoom : MonoBehaviour
 
     void Update()
     {
-        var currentSize = Camera.main.transform.position.z;
+        var currentSize = Camera.main.orthographicSize;
         currentSize *= 1f - Input.GetAxis("Mouse ScrollWheel");
 
-        Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, Mathf.Clamp(currentSize, CameraSizeMin, CameraSizeMax));
+        Camera.main.orthographicSize = Mathf.Clamp(currentSize, CameraSizeMin, CameraSizeMax);
     }
 }

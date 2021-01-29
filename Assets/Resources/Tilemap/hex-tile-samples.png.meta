@@ -1,0 +1,600 @@
+fileFormatVersion: 2
+guid: 5de1392d509429d4ab10511ed3ded33d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -870112357203989237
+    second: hex-tile-samples_0
+  - first:
+      213: -3046112825835226215
+    second: hex-tile-samples_1
+  - first:
+      213: -6576488709223101426
+    second: hex-tile-samples_2
+  - first:
+      213: -7531346070673225796
+    second: hex-tile-samples_3
+  - first:
+      213: -730810821720254902
+    second: hex-tile-samples_4
+  - first:
+      213: 2227117024430051881
+    second: hex-tile-samples_5
+  - first:
+      213: -6529606777445158911
+    second: hex-tile-samples_6
+  - first:
+      213: -2854954565334276645
+    second: hex-tile-samples_7
+  - first:
+      213: -8279716494294675510
+    second: hex-tile-samples_8
+  - first:
+      213: 6018590195938126796
+    second: hex-tile-samples_9
+  - first:
+      213: -5176111894346322468
+    second: hex-tile-samples_10
+  - first:
+      213: -2317675569511530597
+    second: hex-tile-samples_11
+  - first:
+      213: -8531290842108633799
+    second: hex-tile-samples_12
+  - first:
+      213: -6449489451537671503
+    second: hex-tile-samples_13
+  - first:
+      213: -8552569056385069572
+    second: hex-tile-samples_14
+  - first:
+      213: 2993585257298380880
+    second: hex-tile-samples_15
+  - first:
+      213: 187514005133889285
+    second: hex-tile-samples_16
+  - first:
+      213: -1880661852306070775
+    second: hex-tile-samples_17
+  - first:
+      213: -8354550757693305290
+    second: hex-tile-samples_18
+  - first:
+      213: 829057938753841041
+    second: hex-tile-samples_19
+  - first:
+      213: 4466660203832034238
+    second: hex-tile-samples_20
+  - first:
+      213: -728105502484565238
+    second: hex-tile-samples_21
+  - first:
+      213: 2263707167290236744
+    second: hex-tile-samples_22
+  - first:
+      213: 1703682512071428632
+    second: hex-tile-samples_23
+  - first:
+      213: -5357694251024596330
+    second: hex-tile-samples_24
+  - first:
+      213: 6329733179589256568
+    second: hex-tile-samples_25
+  - first:
+      213: -2572249530285486992
+    second: hex-tile-samples_26
+  - first:
+      213: 5906304256296966630
+    second: hex-tile-samples_27
+  - first:
+      213: 211689799178302670
+    second: hex-tile-samples_0
+  - first:
+      213: 277244282641289088
+    second: hex-tile-samples_1
+  - first:
+      213: -5281580434793048308
+    second: hex-tile-samples_2
+  - first:
+      213: -1681416482734557144
+    second: hex-tile-samples_3
+  - first:
+      213: -2781580543573638394
+    second: hex-tile-samples_4
+  - first:
+      213: 1686029572178085831
+    second: hex-tile-samples_5
+  - first:
+      213: 4394189474573294518
+    second: hex-tile-samples_6
+  - first:
+      213: -2315364610585663219
+    second: hex-tile-samples_7
+  - first:
+      213: 4274407141712397505
+    second: hex-tile-samples_8
+  - first:
+      213: -561836768843937649
+    second: hex-tile-samples_9
+  - first:
+      213: 6808482879872983250
+    second: hex-tile-samples_10
+  - first:
+      213: -5734147371345064197
+    second: hex-tile-samples_11
+  - first:
+      213: -8854663779840888566
+    second: hex-tile-samples_12
+  - first:
+      213: -850363992887580892
+    second: hex-tile-samples_13
+  - first:
+      213: -8131790147880124565
+    second: hex-tile-samples_14
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: hex-tile-samples_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 530
+        width: 227.2
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec4b89230c210f200800000000000000
+      internalID: 211689799178302670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hex-tile-samples_1
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 530
+        width: 227.2
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08f87d6c438f8d300800000000000000
+      internalID: 277244282641289088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hex-tile-samples_2
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 530
+        width: 227.2
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c07d18bd39e04b6b0800000000000000
+      internalID: -5281580434793048308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hex-tile-samples_3
+      rect:
+        serializedVersion: 2
+        x: 681
+        y: 530
+        width: 227.2
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 828be131e986aa8e0800000000000000
+      internalID: -1681416482734557144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hex-tile-samples_4
+      rect:
+        serializedVersion: 2
+        x: 908
+        y: 530
+        width: 227.2
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 603c72aab37d569d0800000000000000
+      internalID: -2781580543573638394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hex-tile-samples_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 265
+        width: 227.2
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c78a7286faf56710800000000000000
+      internalID: 1686029572178085831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hex-tile-samples_6
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 265
+        width: 227.2
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6bb93b3bb0c4bfc30800000000000000
+      internalID: 4394189474573294518
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hex-tile-samples_7
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 265
+        width: 227.2
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d09e78c672c2edfd0800000000000000
+      internalID: -2315364610585663219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hex-tile-samples_8
+      rect:
+        serializedVersion: 2
+        x: 681
+        y: 265
+        width: 227.2
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c4092b06aeb15b30800000000000000
+      internalID: 4274407141712397505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hex-tile-samples_9
+      rect:
+        serializedVersion: 2
+        x: 908
+        y: 265
+        width: 227.2
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f88cd4b7f64f338f0800000000000000
+      internalID: -561836768843937649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hex-tile-samples_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 227.2
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d0682a3b179c7e50800000000000000
+      internalID: 6808482879872983250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hex-tile-samples_11
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 0
+        width: 227.2
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bfecc39b8573c60b0800000000000000
+      internalID: -5734147371345064197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hex-tile-samples_12
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 0
+        width: 227.2
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a01f01dc43aed1580800000000000000
+      internalID: -8854663779840888566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hex-tile-samples_13
+      rect:
+        serializedVersion: 2
+        x: 681
+        y: 0
+        width: 227.2
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42727223476e234f0800000000000000
+      internalID: -850363992887580892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hex-tile-samples_14
+      rect:
+        serializedVersion: 2
+        x: 908
+        y: 0
+        width: 227.2
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6f759fc1f3162f80800000000000000
+      internalID: -8131790147880124565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures:
+    - texture: {fileID: 2800000, guid: 686699a32a317754e9db742b72fdf904, type: 3}
+      name: _NormalMap
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

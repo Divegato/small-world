@@ -4,30 +4,30 @@ using UnityEngine;
 
 public class StartOnPlanet : MonoBehaviour
 {
-    private bool initialized = false;
-
-    void Start()
-    {
-    }
+    private bool playerPlaced = false;
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.F5))
         {
-            initialized = false;
+            playerPlaced = false;
         }
 
-        if (!initialized)
+        if (!playerPlaced)
         {
-            var planets = FindObjectsOfType<Planet>();
+            PlacePlayer();
+        }
+    }
 
-            if (planets.Any())
-            {
-                var planet = planets[Random.Range(0, planets.Length)];
-                gameObject.transform.position = planet.transform.position + Geometry.GetRandomPointOnCircle(planet.Radius * 1.1f);
+    private void PlacePlayer()
+    {
+        var planets = FindObjectsOfType<Planet>();
 
-                initialized = true;
-            }
+        if (planets.Any())
+        {
+            var planet = planets[Random.Range(0, planets.Length)];
+            gameObject.transform.position = planet.transform.position + Geometry.GetRandomPointOnCircle(planet.Radius * 1.1f);
+            playerPlaced = true;
         }
     }
 }

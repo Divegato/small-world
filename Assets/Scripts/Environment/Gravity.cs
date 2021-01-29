@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 public class Gravity : MonoBehaviour
@@ -6,40 +7,6 @@ public class Gravity : MonoBehaviour
     private const float GravitationalConstant = 6.67f;
 
     public float GravityPower = 8;
-    public float GravityRange = 8;
-
-    void Start()
-    {
-    }
-
-    //void Update()
-    //{
-    //    //var player = GameObject.FindGameObjectWithTag("Player");
-    //    //var items = GameObject.FindGameObjectsWithTag("Item");
-
-    //    //if (player != null)
-    //    //{
-    //    //    AddGravityForce(player.GetComponent<Rigidbody2D>());
-    //    //}
-
-    //    //foreach (var item in items)
-    //    //{
-    //    //    var body = item.GetComponent<Rigidbody2D>();
-    //    //    AddGravityForce(body);
-    //    //}
-    //}
-
-    private Vector2 GetSelfPosition2d()
-    {
-        var selfPosition = this.gameObject.transform.position;
-        return new Vector2(selfPosition.x, selfPosition.y);
-    }
-
-    private float GetSelfRadius()
-    {
-        return gameObject.transform.localScale.x;
-        // GetComponent<CircleCollider2D>().radius;
-    }
 
     private void AddGravityForce(Rigidbody2D body)
     {
@@ -52,8 +19,27 @@ public class Gravity : MonoBehaviour
         TryGetComponent<Rigidbody2D>(out var rigidBody);
         var mass = rigidBody?.mass ?? GravityPower;
         var centerOfMass = (rigidBody?.centerOfMass ?? Vector2.zero) + (Vector2)transform.position;
-        return CalculateGravity(target.centerOfMass + target.position, target.mass, centerOfMass, mass);
 
+        return CalculateGravity(target.centerOfMass + target.position, target.mass, centerOfMass, mass);
+    }
+
+    [Obsolete]
+    private Vector2 GetSelfPosition2d()
+    {
+        var selfPosition = this.gameObject.transform.position;
+        return new Vector2(selfPosition.x, selfPosition.y);
+    }
+
+    [Obsolete]
+    private float GetSelfRadius()
+    {
+        return gameObject.transform.localScale.x;
+        // GetComponent<CircleCollider2D>().radius;
+    }
+
+    [Obsolete]
+    public Vector2 OldGetForce(Rigidbody2D target)
+    {
         var selfPosition = GetSelfPosition2d();
         var selfRadius = GetSelfRadius();
 
@@ -64,6 +50,7 @@ public class Gravity : MonoBehaviour
 
         return force;
     }
+
 
     private static Vector2 CalculateGravity(Vector2 targetPosition, float targetMass, Vector2 centerOfMass, float mass)
     {

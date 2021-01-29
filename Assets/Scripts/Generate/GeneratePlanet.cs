@@ -3,70 +3,42 @@ using Assets.Scripts.Helpers;
 using UnityEngine;
 using UnityEngine.U2D;
 
-public class PlanetScript : MonoBehaviour
+public static class GeneratePlanet
 {
-    public SpriteShape PlanetSpriteShape;
-
-    public float RotationsPerMinute = 1;
-
-    public GameObject[] Blocks;
-
-    private GameObject core;
-
-    private int MinSizeForGravity = 2;
-
-    private int[,] Tiles;
-
-    void Start()
+    public static void GenerateCoreWithSlicesPlanet(float radius, Transform parent)
     {
-        GenerateCoreWithSlicesPlanet();
+        var shape = Resources.Load<SpriteShape>("SpriteShapes/SpriteShape");
+        GenerateCoreWithSlices(radius, 100, 0.1f, parent, shape);
     }
 
-    void GenerateCoreWithSlicesPlanet()
+    public static void GenerateSingleObjectPlanet(float radius, Transform parent, SpriteShape spriteShape)
     {
-        var collider = GetComponent<CircleCollider2D>();
-        var radius = Mathf.FloorToInt(collider.radius);
-        GenerateCoreWithSlices(radius, 100, 0.1f);
+        GenerateCore(radius, 100, 0.1f, parent, spriteShape);
     }
 
-    void GenerateSingleObjectPlanet()
+    public static void GenerateRandomBlocksPlanet(float radius, GameObject[] blocks)
     {
-        var collider = GetComponent<CircleCollider2D>();
-        var radius = Mathf.FloorToInt(collider.radius);
-        GenerateCore(radius, 100, 0.1f);
-    }
-
-    void GenerateRandomBlocksPlanet()
-    {
-        var collider = GetComponent<CircleCollider2D>();
-
-        var radius = Mathf.FloorToInt(collider.radius);
-
         var blockSize = GetMaxBlockSize(radius);
 
         for (int i = 0; i < radius * 2; i++)
         {
             var point = Geometry.GetRandomPointOnCircle(radius * UnityEngine.Random.Range(0, 100));
-            GenerateBlock(point, UnityEngine.Random.Range(1, blockSize));
+            GenerateBlock(point, UnityEngine.Random.Range(1, blockSize), blocks);
         }
     }
 
-    void GenerateFractalCubePlanet()
+    public static void GenerateFractalCubePlanet(int radius, Vector2 center, GameObject[] blocks)
     {
-        var collider = GetComponent<CircleCollider2D>();
-
-        var radius = Mathf.FloorToInt(collider.radius);
-
         var blockSize = GetMaxBlockSize(radius);
 
-        Tiles = new int[radius, radius];
+        var tiles = new int[radius, radius];
 
-        Tiles = CalculateQuadrant(radius, blockSize);
+        tiles = CalculateQuadrant(radius, blockSize);
 
-        BuildPlanet(radius);
+        BuildPlanet(radius, tiles, center, blocks);
     }
 
-    private int[,] CalculateQuadrant(float radius, float blockSize)
+    private static int[,] CalculateQuadrant(float radius, float blockSize)
     {
         var tiles = new int[(int)radius, (int)radius];
 
@@ -116,43 +88,43 @@ public class PlanetScript : MonoBehaviour
         return tiles;
     }
 
-    private bool TileIsWithinRadius(float x, float y, float radius)
+    private static bool TileIsWithinRadius(float x, float y, float radius)
     {
         return Mathf.Pow(Mathf.Pow(x, 2) + Mathf.Pow(y, 2), 0.5f) <= radius;
     }
 
-    private void BuildPlanet(float radius)
+    private static void BuildPlanet(float radius, int[,] tiles, Vector2 center, GameObject[] blocks)
     {
         for (int x = 0; x < radius; x++)
         {
             for (int y = 0; y < radius; y++)
             {
-                float s = Tiles[x, y];
+                float s = tiles[x, y];
 
                 if (s > 0)
                 {
                     // Add tile
-                    var gx = gameObject.transform.position.x;
-                    var gy = gameObject.transform.position.y;
+                    var gx = center.x;
+                    var gy = center.y;
 
                     if (x == 0 && y == 0)
                     {
                         // Generate the core
-                        GenerateBlock(new Vector3(gx, gy, 0), s * 2);
+                        GenerateBlock(new Vector3(gx, gy, 0), s * 2, blocks);
                     }
                     else
                     {
-                        GenerateBlock(new Vector3(gx + x + s / 2, gy + y + s / 2, 0), s);
-                        GenerateBlock(new Vector3(gx + -1 * (x + s / 2), gy + y + s / 2, 0), s);
-                        GenerateBlock(new Vector3(gx + x + s / 2, gy + -1 * (y + s / 2), 0), s);
-                        GenerateBlock(new Vector3(gx + -1 * (x + s / 2), gy + -1 * (y + s / 2), 0), s);
+                        GenerateBlock(new Vector3(gx + x + s / 2, gy + y + s / 2, 0), s, blocks);
+                        GenerateBlock(new Vector3(gx + -1 * (x + s / 2), gy + y + s / 2, 0), s, blocks);
+                        GenerateBlock(new Vector3(gx + x + s / 2, gy + -1 * (y + s / 2), 0), s, blocks);
+                        GenerateBlock(new Vector3(gx + -1 * (x + s / 2), gy + -1 * (y + s / 2), 0), s, blocks);
                     }
                     // Mark tiles as added
                     for (int bx = x; bx < s + x; bx++)
                     {
                         for (int by = y; by < s + y; by++)
                         {
-                            Tiles[bx, by] = -1;
+                            tiles[bx, by] = -1;
                         }
                     }
                 }
@@ -160,22 +132,12 @@ public class PlanetScript : MonoBehaviour
         }
     }
 
-    void Update()
+    private static GameObject GetRandomBlock(GameObject[] blocks)
     {
-        if (core)
-        {
-            var rotationsPerFrame = (RotationsPerMinute / 60f) * Time.deltaTime;
-            var angle = (2f * Mathf.PI) * rotationsPerFrame;
-            core.transform.Rotate(Vector3.forward, angle);
-        }
+        return blocks[UnityEngine.Random.Range(0, blocks.Length)];
     }
 
-    private GameObject GetRandomBlock()
-    {
-        return Blocks[UnityEngine.Random.Range(0, this.Blocks.Length)];
-    }
-
-    private GameObject GenerateCore(float radius, int granularity, float variationPercent)
+    private static GameObject GenerateCore(float radius, int granularity, float variationPercent, Transform parent, SpriteShape spriteShape)
     {
         var area = Mathf.PI * Mathf.Pow(radius, 2);
         var permimeter = 2 * Mathf.PI * radius;
@@ -193,13 +155,13 @@ public class PlanetScript : MonoBehaviour
             points[i] = new Vector2(x, y);
         }
 
-        core = GenerateShape("Core", points, gameObject.transform, 10, false);
-        core.transform.position = gameObject.transform.position;
+        var core = GenerateShape("Core", points, parent, spriteShape, 10, false, false);
+        core.transform.position = parent.position;
 
         return core;
     }
 
-    private GameObject GenerateShape(string name, Vector2[] points, Transform parent, float density = 1, bool withRigidBody = true)
+    private static GameObject GenerateShape(string name, Vector2[] points, Transform parent, SpriteShape spriteShape, float density = 1, bool withRigidBody = true, bool deconstructable = true)
     {
         //var sum = Vector2.zero;
 
@@ -210,7 +172,7 @@ public class PlanetScript : MonoBehaviour
 
         //var avg = sum / points.Length;
 
-        var center = GetCenter(points);
+        var center = Geometry.GetCenter(points);
         var shape = new GameObject { name = name, tag = "Planet" };
 
         shape.transform.parent = parent;
@@ -223,11 +185,15 @@ public class PlanetScript : MonoBehaviour
         var shapeCollider = shape.AddComponent<PolygonCollider2D>();
         var gravity = shape.AddComponent<Gravity>();
 
-        var area = GetArea(points);
-        shapeController.spriteShape = PlanetSpriteShape;
+        if (deconstructable)
+        {
+            shape.AddComponent<Deconstructable>();
+        }
+
+        var area = Geometry.GetArea(points);
+        shapeController.spriteShape = spriteShape;
         shapeController.splineDetail = points.Length;
         shapeController.enableTangents = true;
-        gravity.GravityRange = area;
         gravity.GravityPower = area;
 
         for (int i = 0; i < points.Length; i++)
@@ -242,6 +208,15 @@ public class PlanetScript : MonoBehaviour
             rigidBody.mass = area;
             rigidBody.gravityScale = 0;
             rigidBody.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+            if (parent.gameObject.TryGetComponent<Rigidbody2D>(out var parentBody))
+            {
+                var joint = shape.AddComponent<FixedJoint2D>();
+                joint.autoConfigureConnectedAnchor = true;
+                joint.connectedBody = parentBody.GetComponent<Rigidbody2D>();
+                joint.breakForce = 400;
+                joint.breakTorque = 300;
+            }
         }
 
         //var shadow = shape.AddComponent<ShadowCaster2D>();
@@ -253,45 +228,10 @@ public class PlanetScript : MonoBehaviour
         return shape;
     }
 
-    float GetArea(Vector2[] points)
-    {
-        float temp = 0;
-        int i = 0;
-        for (; i < points.Length; i++)
-        {
-            if (i != points.Length - 1)
-            {
-                float mulA = points[i].x * points[i + 1].y;
-                float mulB = points[i + 1].x * points[i].y;
-                temp = temp + (mulA - mulB);
-            }
-            else
-            {
-                float mulA = points[i].x * points[0].y;
-                float mulB = points[0].x * points[i].y;
-                temp = temp + (mulA - mulB);
-            }
-        }
-        temp *= 0.5f;
-        return Mathf.Abs(temp);
-    }
-
-    Vector2 GetCenter(Vector2[] points)
-    {
-        var total = Vector2.zero;
-
-        foreach (var point in points)
-        {
-            total += point;
-        }
-
-        return total / points.Length;
-    }
-
-    private GameObject GenerateCoreWithSlices(float radius, int granularity, float variationPercent)
+    public static GameObject GenerateCoreWithSlices(float radius, int granularity, float variationPercent, Transform parent, SpriteShape spriteShape)
     {
         var segments = 10;
-        var core = GenerateCore(radius / 2, granularity, variationPercent);
+        var core = GenerateCore(radius / 2, granularity, variationPercent, parent, spriteShape);
 
         var points = core.GetComponent<PolygonCollider2D>().points;
 
@@ -322,9 +262,9 @@ public class PlanetScript : MonoBehaviour
                     .Union(points.Skip(granularity / segments * segment).Take((granularity / segments) + 1).Reverse())
                     .ToArray();
 
-                var shape = GenerateShape("Shell", slice, core.transform);
+                var shape = GenerateShape("Shell", slice, core.transform, spriteShape);
                 var gravity = shape.AddComponent<GravityObject>();
-                gravity.RefreshRate = 0;
+                gravity.RefreshRate = 1f;
 
                 segment++;
             }
@@ -337,9 +277,9 @@ public class PlanetScript : MonoBehaviour
             .Union(points.Skip(granularity / segments * segment).Take((granularity / segments) + 1).Reverse())
             .ToArray();
 
-        var lastShape = GenerateShape("Shell", lastSlice, core.transform);
+        var lastShape = GenerateShape("Shell", lastSlice, core.transform, spriteShape);
         var lastGravity = lastShape.AddComponent<GravityObject>();
-        lastGravity.RefreshRate = 0;
+        lastGravity.RefreshRate = 1f;
 
 
         //var singleSlice = outerPoints.Union(points.Reverse()).ToArray();
@@ -383,11 +323,9 @@ public class PlanetScript : MonoBehaviour
         return core;
     }
 
-
-
-    private GameObject GenerateBlock(Vector3 position, float blockSize)
+    public static GameObject GenerateBlock(Vector3 position, float blockSize, GameObject[] blocks)
     {
-        var template = GetRandomBlock();
+        var template = GetRandomBlock(blocks);
         template.transform.localScale = new Vector3(blockSize, blockSize, blockSize);
 
         var block = Spawner.BuildBlock(template, position, true);
@@ -396,10 +334,9 @@ public class PlanetScript : MonoBehaviour
             var body = block.GetComponent<Rigidbody2D>();
             body.mass = Mathf.Pow(blockSize, 3);
 
-            if (blockSize >= MinSizeForGravity)
+            if (blockSize >= 2)
             {
                 var gravity = block.AddComponent<Gravity>();
-                gravity.GravityRange = blockSize;
                 gravity.GravityPower = blockSize;
             }
         }
@@ -407,7 +344,7 @@ public class PlanetScript : MonoBehaviour
         return block;
     }
 
-    private float GetMaxBlockSize(float radius)
+    public static float GetMaxBlockSize(float radius)
     {
         var blockSize = 1;
 
