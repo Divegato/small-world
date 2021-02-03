@@ -161,6 +161,30 @@ public static class GeneratePlanet
         return core;
     }
 
+    public static GameObject GenerateShape(string name, string tag, Vector2[] points, Transform parent)
+    {
+        var center = Geometry.GetCenter(points);
+        var shape = new GameObject { name = name, tag = "Planet" };
+
+        shape.transform.parent = parent;
+        shape.transform.position = parent.transform.position + (Vector3)center;
+
+        var renderer = shape.AddComponent<SpriteShapeRenderer>();
+        var shapeController = shape.AddComponent<SpriteShapeController>();
+
+        var spriteShape = Resources.Load<SpriteShape>("SpriteShapes/SpriteShape");
+        shapeController.spriteShape = spriteShape;
+        shapeController.splineDetail = points.Length;
+        shapeController.enableTangents = true;
+
+        for (int i = 0; i < points.Length; i++)
+        {
+            shapeController.spline.InsertPointAt(i, new Vector2(points[i].x, points[i].y) - center);
+        }
+
+        return shape;
+    }
+
     private static GameObject GenerateShape(string name, Vector2[] points, Transform parent, SpriteShape spriteShape, float density = 1, bool withRigidBody = true, bool deconstructable = true)
     {
         //var sum = Vector2.zero;

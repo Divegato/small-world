@@ -53,5 +53,22 @@ namespace Assets.Scripts.Helpers
 
             return total / points.Length;
         }
+
+        public static Vector2[] GetCircle(float radius, int granularity, float variation = 0)
+        {
+            var points = new Vector2[granularity];
+
+            for (int i = 0; i < granularity; i++)
+            {
+                var angle = 2 * Mathf.PI / granularity * i;
+                var length = (radius + Random.Range(variation * -1, variation));
+                var x = Mathf.Cos(angle) * length;
+                var y = Mathf.Sin(angle) * length;
+
+                points[i] = new Vector2(x, y);
+            }
+
+            return points;
+        }
     }
 }

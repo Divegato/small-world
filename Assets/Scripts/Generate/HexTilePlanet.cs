@@ -8,16 +8,26 @@ public static class HexTilePlanet
 {
     public static void Generate(float radius, Transform parent)
     {
+
+        var points = Geometry.GetCircle(radius * 0.9f, 100);
+        var core = GeneratePlanet.GenerateShape("Core", "Background", points, parent);
+        core.transform.localPosition = Vector3.forward;
+
         var body = new GameObject { name = "HexPlanet", tag = "Planet" };
-        body.transform.parent = parent;
-        body.transform.localPosition = Vector3.zero;
+        body.transform.parent = core.transform;
+        body.transform.localPosition = Vector3.back;
 
-        var tileMap = body.AddComponent<Tilemap>();
-        var renderer = body.AddComponent<TilemapRenderer>();
+        body.AddComponent<Deconstructable>();
 
+        var hexSize = 1.33f;
         var grid = body.AddComponent<Grid>();
         grid.cellLayout = GridLayout.CellLayout.Hexagon;
-        grid.cellSize = new Vector3(2.28f, 2.66f, 1);
+        grid.cellSize = new Vector3(Mathf.Sqrt(3) * hexSize, 2 * hexSize, 1);
+
+        var tileMap = body.AddComponent<Tilemap>();
+        tileMap.tileAnchor = Vector3.zero;
+
+        var renderer = body.AddComponent<TilemapRenderer>();
 
         var gravity = body.AddComponent<Gravity>();
         gravity.GravityPower = Mathf.PI * Mathf.Pow(radius, 2);
@@ -54,7 +64,10 @@ public static class HexTilePlanet
                 var col = xCoord + (row - (row & 1)) / 2;
 
                 var cubeCoordinate = HexCoordinates.ConvertOffsetToCube(row, col);
-                if ((Vector3Int.zero - cubeCoordinate).magnitude * 2.5f < radius)
+
+                var actualPosition = new Vector2(hexSize * Mathf.Sqrt(3) * (col + 0.5f * (row & 1)), hexSize * 3 / 2 * row);
+
+                if (actualPosition.magnitude < radius)
                 {
                     var index = Math.Max(0, Math.Min((int)Math.Floor(heightMap[row + intRadius, col + intRadius]), tiles.Length - 1));
 
@@ -81,7 +94,5 @@ public static class HexTilePlanet
 
         var collider = body.AddComponent<CompositeCollider2D>();
         collider.geometryType = CompositeCollider2D.GeometryType.Polygons;
-        collider.generationType = CompositeCollider2D.GenerationType.Manual;
-        collider.GenerateGeometry();
     }
 }

@@ -20,8 +20,8 @@ public class SolarSystem : MonoBehaviour
         var orbitDistance = 1000;
         for (int i = 0; i < PlanetCount; i++)
         {
-            var radius = Random.Range(10, 500);
-            orbitDistance += radius + Random.Range(1000, 10000);
+            var radius = Random.Range(10, 200);
+            orbitDistance += radius + Random.Range(700, 1000);
             var center = Geometry.GetRandomPointOnCircle(orbitDistance);
 
             GenerateCelestialBody.Generate(new CelestialBody

@@ -56,7 +56,7 @@ public class Gravity : MonoBehaviour
     {
         var distance = centerOfMass - targetPosition;
 
-        if (distance.magnitude == 0)
+        if (distance.magnitude < 1)
         {
             return Vector2.zero;
         }
