@@ -5476,6 +5476,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2067885283189081399}
     m_Modifications:
+    - target: {fileID: 4330961415052225847, guid: f5ff9a43ca499714dbae8eccdb92d273,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6419238014169704598, guid: f5ff9a43ca499714dbae8eccdb92d273,
+        type: 3}
+      propertyPath: m_Text
+      value: 'WASD to move when on a planet
+
+        Right click to deconstruct blocks
+
+        Left
+        click to build structures
+
+        Mousewheel to zoom in and out
+
+        Try
+        to reach all four moons'
+      objectReference: {fileID: 0}
     - target: {fileID: 6419238014921584798, guid: f5ff9a43ca499714dbae8eccdb92d273,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5584,7 +5604,12 @@ PrefabInstance:
     - target: {fileID: 6419238014921584802, guid: f5ff9a43ca499714dbae8eccdb92d273,
         type: 3}
       propertyPath: m_Name
-      value: Canvas
+      value: HUD
+      objectReference: {fileID: 0}
+    - target: {fileID: 7794212361444962499, guid: f5ff9a43ca499714dbae8eccdb92d273,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f5ff9a43ca499714dbae8eccdb92d273, type: 3}

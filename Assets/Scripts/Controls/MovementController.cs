@@ -44,14 +44,21 @@ public class MovementController : MonoBehaviour
             direction += Rotate(body.transform.up, -90);
         }
 
-        Physics2D.OverlapArea(body.transform.up, body.transform.up);
+        var nearby = Environment.GetNearbyPlanet(collider);
+        if (nearby.Any())
+        {
+            transform.parent = nearby[0].transform;
+        }
+        else
+        {
+            transform.parent = null;
+        }
 
         if (direction.magnitude > 0)
         {
-            var nearby = Environment.GetNearbyPlanet(collider);
-            body.velocity = (body.velocity + (direction.normalized * 10)) / 2;
-            if (nearby.Any())
+            if (nearby.Any() || Input.GetKeyDown(KeyCode.LeftShift))
             {
+                body.velocity = (body.velocity + (direction.normalized * 10)) / 2;
                 foreach (var block in nearby)
                 {
                     if (block.attachedRigidbody)

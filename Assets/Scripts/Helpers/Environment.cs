@@ -32,18 +32,5 @@ namespace Assets.Scripts.Helpers
 
             return result;
         }
-
-        public static Vector2 GetAverageGravitationalForce(Rigidbody2D target)
-        {
-            var gravitySources = Object.FindObjectsOfType<Gravity>();
-
-            var averageForce = Vector2.zero;
-            foreach (var source in gravitySources)
-            {
-                averageForce += source.GetForce(target);
-            }
-
-            return averageForce;
-        }
     }
 }

@@ -8,7 +8,6 @@ public static class HexTilePlanet
 {
     public static void Generate(float radius, Transform parent)
     {
-
         var points = Geometry.GetCircle(radius * 0.9f, 100);
         var core = GeneratePlanet.GenerateShape("Core", "Background", points, parent);
         core.transform.localPosition = Vector3.forward;
@@ -29,7 +28,7 @@ public static class HexTilePlanet
 
         var renderer = body.AddComponent<TilemapRenderer>();
 
-        var gravity = body.AddComponent<Gravity>();
+        var gravity = body.AddComponent<GravitySource>();
         gravity.GravityPower = Mathf.PI * Mathf.Pow(radius, 2);
 
         var sprites = Resources.LoadAll<Sprite>("Tilemap/hex-tile-samples");

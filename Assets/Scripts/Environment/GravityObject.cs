@@ -14,7 +14,7 @@ public class GravityObject : MonoBehaviour
         progress = Random.value * RefreshRate;
 
         var body = GetComponent<Rigidbody2D>();
-        force = Environment.GetAverageGravitationalForce(body);
+        force = Gravity.GetAverageGravitationalForce(body);
     }
 
     void Update()
@@ -28,7 +28,7 @@ public class GravityObject : MonoBehaviour
         if (progress >= RefreshRate)
         {
             progress = (Random.value * RefreshRate) - (RefreshRate / 2);
-            force = Environment.GetAverageGravitationalForce(body);
+            force = Gravity.GetAverageGravitationalForce(body);
             color = Color.red;
         }
 

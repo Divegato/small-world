@@ -8,6 +8,8 @@ TagManager:
   - Planet
   - Help
   - Asteroid
+  - Sun
+  - HUD
   layers:
   - Default
   - TransparentFX

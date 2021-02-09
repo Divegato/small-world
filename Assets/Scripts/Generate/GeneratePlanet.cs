@@ -207,7 +207,7 @@ public static class GeneratePlanet
         var renderer = shape.AddComponent<SpriteShapeRenderer>();
         var shapeController = shape.AddComponent<SpriteShapeController>();
         var shapeCollider = shape.AddComponent<PolygonCollider2D>();
-        var gravity = shape.AddComponent<Gravity>();
+        var gravity = shape.AddComponent<GravitySource>();
 
         if (deconstructable)
         {
@@ -328,7 +328,7 @@ public static class GeneratePlanet
         //}
 
 
-        // Todo center game object on average location of points and adjust points accordingly
+        // TODO: center game object on average location of points and adjust points accordingly
         //var nextPoint = points[(i + 1) % points.Length];
 
         //var slicePoints = new[]
@@ -360,7 +360,7 @@ public static class GeneratePlanet
 
             if (blockSize >= 2)
             {
-                var gravity = block.AddComponent<Gravity>();
+                var gravity = block.AddComponent<GravitySource>();
                 gravity.GravityPower = blockSize;
             }
         }

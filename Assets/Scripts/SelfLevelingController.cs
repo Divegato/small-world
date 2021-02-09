@@ -12,7 +12,7 @@ public class SelfLevelingController : MonoBehaviour
 
     void Update()
     {
-        var force = Environment.GetAverageGravitationalForce(body);
+        var force = Gravity.GetAverageGravitationalForce(body);
         transform.rotation = Quaternion.LookRotation(Vector3.forward, force * -1);
     }
 }

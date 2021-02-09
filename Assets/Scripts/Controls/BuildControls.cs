@@ -1,79 +1,96 @@
-﻿using System.Linq;
-using UnityEditor;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Assets.Scripts.Models;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Experimental.Rendering.Universal;
 using UnityEngine.Tilemaps;
 using UnityEngine.U2D;
 
 public class BuildControls : MonoBehaviour
 {
-    public SpriteAtlas Sprites;
-
-    public GameObject Spawn;
+    public float BuildDistance = 5; // TODO: This will be part of a player stat model
 
     public GameObject Cursor;
-
-    public int BlockCount = 0;
-
-    public float BuildDistance = 5;
-
     private Light2D CursorLight;
-    private Vector3Int CursorTarget;
+    private TileCursor CursorTarget;
 
-    private Tile[] Tiles;
+    public int BlockCount = 0; // TODO: This will be the responsibility of the BuildNetwork in the future
+
+    private RecipeBook Recipes;
+    private Recipe SelectedRecipe;
+    private List<Tuple<KeyCode, Recipe>> RecipeMap;
+
+    public SpriteAtlas Sprites;
+    private Dictionary<string, Tile> Tiles;
 
     void Start()
     {
-        BlockCount = 100;
+        Recipes = new RecipeBook();
+        Tiles = Recipes.Recipes.ToDictionary(x => x.Key, x => CreateTile(x.Value.SpriteName));
+
+        BlockCount = 100; // TODO: This will be the responsibility of the BuildNetwork in the future
+
         Cursor = Instantiate(Cursor);
         Cursor.SetActive(false);
-
         CursorLight = Cursor.GetComponent<Light2D>();
 
-        var spriteArray = new Sprite[Sprites.spriteCount];
-        var count = Sprites.GetSprites(spriteArray);
-
-        Tiles = spriteArray.Select(x =>
+        // TODO: Make a UI for seeing and changing this mapping
+        RecipeMap = new List<Tuple<KeyCode, Recipe>>
         {
-            var tile = ScriptableObject.CreateInstance<Tile>();
-            tile.sprite = x;
-            tile.colliderType = Tile.ColliderType.Grid;
+            new Tuple<KeyCode, Recipe>(KeyCode.Alpha1, Recipes.Recipes["wall"]),
+            new Tuple<KeyCode, Recipe>(KeyCode.Alpha2, Recipes.Recipes["forge"]),
+            new Tuple<KeyCode, Recipe>(KeyCode.Alpha3, Recipes.Recipes["storage"]),
+            new Tuple<KeyCode, Recipe>(KeyCode.Alpha4, Recipes.Recipes["solar"]),
+            new Tuple<KeyCode, Recipe>(KeyCode.Alpha5, Recipes.Recipes["battery"]),
+            new Tuple<KeyCode, Recipe>(KeyCode.Alpha6, Recipes.Recipes["portal"])
+        };
+    }
 
-            return tile;
-        }).ToArray();
+    private Tile CreateTile(string spriteName)
+    {
+        var tile = ScriptableObject.CreateInstance<Tile>();
+        tile.sprite = Sprites.GetSprite(spriteName);
+        tile.colliderType = Tile.ColliderType.Grid;
+
+        return tile;
     }
 
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.anyKeyDown)
         {
-            if (BlockCount > 0)
+            SelectBuildStructure();
+        }
+
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
+        var cursor = MoveCursor();
+
+        if (cursor != null)
+        {
+            if (Input.GetMouseButtonDown(0))
             {
-                var mousePoint = Input.mousePosition;
-                mousePoint.z = 10f;
-                var target = Camera.main.ScreenToWorldPoint(mousePoint);
-                var buildDistance = (Vector2)transform.position - (Vector2)target;
-
-                if (buildDistance.magnitude < 10 && buildDistance.magnitude > 2.1)
-                {
-                    var targets = Physics2D.OverlapCircleAll(transform.position, 10);
-
-                    Tilemap tileMap = null;
-                    var found = targets.Any(x => x.gameObject.TryGetComponent(out tileMap));
-                    if (found)
-                    {
-                        Vector3Int tileCoordinate = tileMap.WorldToCell(target);
-                        var existingSprite = tileMap.GetSprite(tileCoordinate);
-
-                        if (existingSprite == null)
-                        {
-                            tileMap.SetTile(tileCoordinate, Tiles[0]);
-                            BlockCount--;
-                        }
-                    }
-                }
+                TryActivateStructure(cursor);
+            }
+            else if (Input.GetMouseButton(0))
+            {
+                TryBuildStructureAtCursor(cursor);
+            }
+            else if (Input.GetMouseButton(1))
+            {
+                TryDeconstructAtCursor(cursor);
             }
         }
+    }
+
+    private TileCursor MoveCursor()
+    {
+        CursorTarget = null;
 
         var mouseWorldPos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -88,21 +105,25 @@ public class BuildControls : MonoBehaviour
             if (target.TryGetComponent<Tilemap>(out var tileMap))
             {
                 var center = tileMap.GetCellCenterWorld(Vector3Int.zero) - tileMap.transform.position;
-                Vector3Int tileCoordinate = tileMap.WorldToCell((Vector3)mouseWorldPos - center);
+                var tileCoordinate = tileMap.WorldToCell((Vector3)mouseWorldPos - center);
                 var tileLocation = tileMap.GetCellCenterWorld(tileCoordinate);
                 var localPosition = tileMap.CellToLocalInterpolated(tileCoordinate);
-                CursorTarget = tileCoordinate;
-                // Todo, make hex cursor
+
+                var existingSprite = tileMap.GetSprite(tileCoordinate);
+                CursorTarget = new TileCursor
+                {
+                    Map = tileMap,
+                    Position = tileCoordinate,
+                    CurrentSprite = existingSprite
+                };
+
                 Cursor.transform.parent = hit.transform;
                 Cursor.transform.position = tileLocation;
-                //Cursor.transform.localPosition = localPosition;
                 Cursor.transform.localRotation = Quaternion.identity;
 
                 if (Input.GetMouseButton(1))
                 {
-                    BlockCount++;
                     color = Color.red;
-                    tileMap.SetTile(tileCoordinate, null);
                 }
 
                 CursorLight.color = color;
@@ -111,72 +132,6 @@ public class BuildControls : MonoBehaviour
                 Debug.DrawLine(transform.position, (Vector3)mouseWorldPos - center, color);
                 Debug.DrawLine((Vector3)mouseWorldPos - center, tileLocation, color);
             }
-            else if (target.TryGetComponent<SpriteShapeController>(out var spriteShape))
-            {
-                Cursor.transform.parent = hit.transform;
-                Cursor.transform.position = hit.point;
-                Cursor.transform.localRotation = Quaternion.identity;
-                Cursor.transform.localPosition = new Vector3(Mathf.Round(Cursor.transform.localPosition.x + 0.5f) - 0.5f, Mathf.Round(Cursor.transform.localPosition.y + 0.5f) - 0.5f, 0);
-
-                if (Input.GetMouseButtonDown(1))
-                {
-                    color = Color.red;
-
-                    var closestPoint = 0;
-                    var closestDistance = 99999f;
-                    for (int i = 0; i < spriteShape.spline.GetPointCount(); i++)
-                    {
-                        var point = spriteShape.spline.GetPosition(i);
-                        var pointDistance = (Cursor.transform.localPosition - point).magnitude;
-
-                        if (pointDistance < closestDistance)
-                        {
-                            closestDistance = pointDistance;
-                            closestPoint = i;
-                        }
-                    }
-
-                    if (closestDistance > 0.1)
-                    {
-                        spriteShape.spline.InsertPointAt(closestPoint, Cursor.transform.localPosition + new Vector3(0.5f, -0.5f, 0));
-                        spriteShape.spline.InsertPointAt(closestPoint, Cursor.transform.localPosition + new Vector3(-0.5f, -0.5f, 0));
-                        spriteShape.spline.InsertPointAt(closestPoint, Cursor.transform.localPosition + new Vector3(-0.5f, 0.5f, 0));
-                        spriteShape.spline.InsertPointAt(closestPoint, Cursor.transform.localPosition + new Vector3(0.5f, 0.5f, 0));
-                    }
-                }
-
-                //var results = new RaycastHit2D[5];
-                //var hits = Physics2D.Raycast(ray.origin, ray.direction, new ContactFilter2D(), results);
-
-                //if (hits > 0)
-                //{
-                //foreach (var hit in results)
-                //{
-                //if (hit && hit.transform.localScale.x * hit.transform.localScale.y <= 1.5 && hit.transform.tag == "Item")
-                //{
-                //Destroy(hit.transform.gameObject);
-                //BlockCount++;
-                //}
-                //}
-                //}
-
-                CursorLight.color = color;
-                Cursor.SetActive(true);
-            }
-
-
-            //for (int i = 0; i < 4; i++)
-            //{
-            //    var a1 = i * (Mathf.PI / 2) + hit.transform.rotation.z;
-            //    var a2 = (i + 1) * (Mathf.PI / 2) + hit.transform.rotation.z;
-
-            //    var sin1 = Mathf.Sin(a1) + hit.point.x;
-            //    var cos1 = Mathf.Cos(a1) + hit.point.y;
-            //    var sin2 = Mathf.Sin(a2) + hit.point.x;
-            //    var cos2 = Mathf.Cos(a2) + hit.point.y;
-
-            //    Debug.DrawLine(new Vector3(sin1, cos1, 0), new Vector3(sin2, cos2, 0), color);
-            //}
 
             Debug.DrawLine(transform.position, mouseWorldPos, color);
             Debug.DrawLine(transform.position, hit.point, color);
@@ -185,13 +140,106 @@ public class BuildControls : MonoBehaviour
         else
         {
             Cursor.SetActive(false);
+
+            // TODO: consolodate a bit with the above block
+            // TODO: render a ghost tile where we will be building
+            var mousePoint = Input.mousePosition;
+            mousePoint.z = 10f;
+            var target = Camera.main.ScreenToWorldPoint(mousePoint);
+            var buildDistance = (Vector2)transform.position - (Vector2)target;
+
+            if (buildDistance.magnitude < BuildDistance)
+            {
+                var targets = Physics2D.OverlapCircleAll(transform.position, BuildDistance);
+
+                Tilemap tileMap = null;
+                var found = targets.Any(x => x.gameObject.TryGetComponent(out tileMap));
+                if (found)
+                {
+                    Vector3Int tileCoordinate = tileMap.WorldToCell(target);
+                    CursorTarget = new TileCursor
+                    {
+                        Map = tileMap,
+                        Position = tileCoordinate
+                    };
+                }
+            }
+        }
+
+        return CursorTarget;
+    }
+
+    private void SelectBuildStructure()
+    {
+        if (RecipeMap != null)
+        {
+            foreach (var map in RecipeMap)
+            {
+                if (Input.GetKeyDown(map.Item1))
+                {
+                    SelectedRecipe = map.Item2;
+                }
+            }
         }
     }
 
-    void OnDrawGizmos()
+    private void TryActivateStructure(TileCursor cursor)
     {
-#if DEBUG
-        Handles.Label(Cursor.transform.position, CursorTarget.ToString());
-#endif
+        if (cursor.CurrentSprite != null)
+        {
+            if (TryGetComponent<BuildNetwork>(out var network))
+            {
+                network.ActivateStructure(cursor.Map, (Vector2Int)cursor.Position);
+            }
+        }
+    }
+
+    private void TryDeconstructAtCursor(TileCursor cursor)
+    {
+        if (cursor.CurrentSprite != null)
+        {
+            if (TryGetComponent<BuildNetwork>(out var network))
+            {
+                network.RemoveStructure(cursor.Map, (Vector2Int)cursor.Position);
+            }
+
+            // TODO: Add structure back to inventory
+            BlockCount++; // TODO: This will be the responsibility of network.RemoveStructure in the future
+            cursor.Map.SetTile(cursor.Position, null);
+        }
+    }
+
+    private void TryBuildStructureAtCursor(TileCursor cursor)
+    {
+        if (cursor.CurrentSprite == null)
+        {
+            if (SelectedRecipe != null && BlockCount > 0)
+            {
+                // TODO: Make sure to not build on top of self buildDistance.magnitude > 2.1
+
+
+                BuildStructure(cursor.Map, cursor.Position, SelectedRecipe);
+            }
+        }
+    }
+
+    private void BuildStructure(Tilemap tileMap, Vector3Int tileCoordinate, Recipe recipe)
+    {
+        if (TryGetComponent<BuildNetwork>(out var network))
+        {
+            if (network.TrySpend(recipe))
+            {
+                if (recipe.StructureClass != null)
+                {
+                    Structure structure = (Structure)Activator.CreateInstance(recipe.StructureClass);
+                    structure.Parent = tileMap;
+                    structure.GridLocation = (Vector2Int)tileCoordinate;
+                    structure.Definition = recipe;
+                    network.AddStructure(structure);
+                }
+
+                tileMap.SetTile(tileCoordinate, Tiles[recipe.Id]);
+            }
+        }
     }
 }

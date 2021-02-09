@@ -193,7 +193,7 @@ PrefabInstance:
     - target: {fileID: 1215873480117229110, guid: e06a609201d6efd498fbee19b864b7fd,
         type: 3}
       propertyPath: m_TagString
-      value: Planet
+      value: Sun
       objectReference: {fileID: 0}
     - target: {fileID: 1501698424773718473, guid: e06a609201d6efd498fbee19b864b7fd,
         type: 3}
@@ -314,6 +314,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1764025819160941106, guid: 874cfbfd3cbc52a4b9017a556c12801b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2067885281181964574, guid: 874cfbfd3cbc52a4b9017a556c12801b,
         type: 3}
       propertyPath: orthographic
@@ -443,3 +448,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2014812305 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2067885283189081403, guid: 874cfbfd3cbc52a4b9017a556c12801b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1776506877}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2014812315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2014812305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3534105e4608d7c4f8f989872b07fb69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxCharge: 0
