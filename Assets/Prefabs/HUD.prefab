@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 6419238015099265302}
   - component: {fileID: 6419238015099265296}
   m_Layer: 5
-  m_Name: Blocks
+  m_Name: Inventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -349,9 +349,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Blocks
-
-'
+  m_Text: 
 --- !u!114 &6419238015099265296
 MonoBehaviour:
   m_ObjectHideFlags: 0

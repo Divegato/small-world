@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Models;
+﻿using System.Collections.Generic;
+using Assets.Scripts.Models;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,7 +7,25 @@ namespace Assets.Scripts.Structures
 {
     public class ForgeStructure : Structure
     {
-        public Recipe Recipe;
+        public static Recipe Recipe = new Recipe
+        {
+            Id = "forge",
+            DisplayName = "Forge",
+            SecondsToBuild = 5,
+            SpriteName = "hex-tiles_0",
+            StructureClass = typeof(ForgeStructure),
+            Cost = new List<MaterialQuantity>
+            {
+                new MaterialQuantity { Id = "stone", Quantity = 5 }
+            }
+        };
+
+        public override Recipe GetRecipe()
+        {
+            return Recipe;
+        }
+
+        public Recipe SelectedRecipe;
 
         private Vector3 position;
 
@@ -22,20 +41,23 @@ namespace Assets.Scripts.Structures
         {
             position = Parent.CellToWorld((Vector3Int)GridLocation);
 
-            if (Storage == null && Recipe != null)
+            if (Storage == null && SelectedRecipe != null)
             {
                 if (!Paid)
                 {
-                    Pay(Recipe, network);
+                    if (network.TrySpendMaterial(SelectedRecipe.Cost))
+                    {
+                        Paid = true;
+                    }
                 }
 
-                if (network.TryToPower(PowerPerSecond * Time.deltaTime))
+                if (Paid && network.TryToPower(PowerPerSecond * Time.deltaTime))
                 {
                     Progress += Time.deltaTime;
 
-                    if (Progress > Recipe.SecondsToBuild)
+                    if (Progress > SelectedRecipe.SecondsToBuild)
                     {
-                        Storage = Recipe;
+                        Storage = SelectedRecipe;
                         Progress = 0;
                         Paid = false;
                     }
@@ -52,21 +74,16 @@ namespace Assets.Scripts.Structures
             }
         }
 
-        public void BuildRecipe(Recipe recipe)
+        public void SelectRecipe(Recipe recipe)
         {
-            if (Progress > 0 && Recipe != null)
+            if (Progress > 0 && SelectedRecipe != null)
             {
-                Refund(Recipe);
+                Refund(SelectedRecipe);
             }
 
             Progress = 0;
             Paid = false;
-            Recipe = recipe;
-        }
-
-        private void Pay(Recipe recipe, BuildNetwork network)
-        {
-            // TODO: Pay for Recipe
+            SelectedRecipe = recipe;
         }
 
         private void Refund(Recipe recipe)
@@ -77,10 +94,10 @@ namespace Assets.Scripts.Structures
 
         public override void DrawDebugInfo()
         {
-            if (Recipe != null)
+            if (SelectedRecipe != null)
             {
-                var percent = Progress / Recipe.SecondsToBuild;
-                Handles.Label(position, string.Format("{0} {1} {2}", Recipe.DisplayName, percent.ToString("P"), Storage == null ? "" : "Complete"));
+                var percent = Progress / SelectedRecipe.SecondsToBuild;
+                Handles.Label(position, string.Format("{0} {1} {2}", SelectedRecipe.DisplayName, percent.ToString("P"), Storage == null ? "" : "Complete"));
             }
         }
     }

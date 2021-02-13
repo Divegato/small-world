@@ -13,6 +13,7 @@ public class SelfLevelingController : MonoBehaviour
     void Update()
     {
         var force = Gravity.GetAverageGravitationalForce(body);
+        // TODO: Limit the max speed of rotation
         transform.rotation = Quaternion.LookRotation(Vector3.forward, force * -1);
     }
 }

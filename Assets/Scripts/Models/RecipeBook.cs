@@ -10,12 +10,12 @@ namespace Assets.Scripts.Models
         {
             Recipes = new Dictionary<string, Recipe>
             {
+                { "stone", BuildRecipe("stone", "Stone", 0, "hex-tiles_8") },
                 { "wall", BuildRecipe("wall", "Wall", 1, "hex-tiles_1") },
-                { "forge", BuildRecipe("forge", "Forge", 30, "hex-tiles_0", typeof(ForgeStructure)) },
-                { "storage", BuildRecipe("storage", "Storage", 30, "hex-tiles_2", typeof(StorageStructure)) },
-                { "solar", BuildRecipe("solar", "Solar Panel", 30, "hex-tiles_3", typeof(SolarStructure)) },
-                { "battery", BuildRecipe("battery", "Battery", 30, "hex-tiles_4", typeof(BatteryStructure)) },
-                { "portal", BuildRecipe("portal", "Portal", 600, "hex--") }
+                { "forge", ForgeStructure.Recipe },
+                { "storage", StorageStructure.Recipe },
+                { "solar", SolarStructure.Recipe },
+                { "battery", BatteryStructure.Recipe }
             };
         }
 

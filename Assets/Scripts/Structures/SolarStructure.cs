@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Assets.Scripts.Models;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,6 +8,24 @@ namespace Assets.Scripts.Structures
 {
     public class SolarStructure : Structure
     {
+        public static Recipe Recipe = new Recipe
+        {
+            Id = "solar",
+            DisplayName = "Solar Panel",
+            SecondsToBuild = 30,
+            SpriteName = "hex-tiles_3",
+            StructureClass = typeof(SolarStructure),
+            Cost = new List<MaterialQuantity>
+            {
+                new MaterialQuantity { Id = "stone", Quantity = 10 }
+            }
+        };
+
+        public override Recipe GetRecipe()
+        {
+            return Recipe;
+        }
+
         public float MaxCharge = 10;
         public float ElectricCharge = 0;
         public float ChargeRatePerSecond = 1;
@@ -31,7 +51,7 @@ namespace Assets.Scripts.Structures
             {
                 var sun = Object.FindObjectOfType<Sun>();
                 var sunDirection = (sun.transform.position - solarPosition).normalized;
-                var startPosition = solarPosition + (sunDirection * 1.33f);
+                var startPosition = solarPosition + (sunDirection * 1.28f);
                 var hit = Physics2D.Raycast(startPosition, sunDirection);
                 Debug.DrawRay(startPosition, sunDirection, Color.blue);
 

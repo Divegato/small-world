@@ -21,7 +21,7 @@ public class StartOnPlanet : MonoBehaviour
 
     private void PlacePlayer()
     {
-        var planets = FindObjectsOfType<Planet>();
+        var planets = FindObjectsOfType<Planet>().Where(x => x.name.StartsWith("Planet")).ToArray();
 
         if (planets.Any())
         {

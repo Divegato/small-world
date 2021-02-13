@@ -21,19 +21,33 @@ public class SolarSystem : MonoBehaviour
         for (int i = 0; i < PlanetCount; i++)
         {
             var radius = Random.Range(10, 200);
-            orbitDistance += radius + Random.Range(700, 1000);
+            orbitDistance += radius + Random.Range(1000, 2000);
             var center = Geometry.GetRandomPointOnCircle(orbitDistance);
 
-            GenerateCelestialBody.Generate(new CelestialBody
+            var planet = GenerateCelestialBody.Generate(new CelestialBody
             {
-                Name = "Planet-" + i,
+                Name = "Planet-" + i, // Start on planet script depends on this name
                 Type = CelestialBodyType.Planet,
                 Radius = radius
             }, center);
 
-            // x moons per planet
-        }
+            var moons = Random.Range(0, 5);
 
-        // - asteroids
+            var moonOrbitDistance = radius * 4;
+            for (int j = 0; j < moons; j++)
+            {
+                var moonRadius = Random.Range(5, radius / 4);
+                moonOrbitDistance += radius + Random.Range(100, 200);
+                orbitDistance += moonOrbitDistance;
+                var moonCenter = Geometry.GetRandomPointOnCircle(moonOrbitDistance);
+
+                var moon = GenerateCelestialBody.Generate(new CelestialBody
+                {
+                    Name = "Moon-" + i + "-" + j,
+                    Type = CelestialBodyType.Planet,
+                    Radius = moonRadius
+                }, moonCenter + center);
+            }
+        }
     }
 }

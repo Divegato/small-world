@@ -16,8 +16,6 @@ public class BuildControls : MonoBehaviour
     private Light2D CursorLight;
     private TileCursor CursorTarget;
 
-    public int BlockCount = 0; // TODO: This will be the responsibility of the BuildNetwork in the future
-
     private RecipeBook Recipes;
     private Recipe SelectedRecipe;
     private List<Tuple<KeyCode, Recipe>> RecipeMap;
@@ -30,8 +28,6 @@ public class BuildControls : MonoBehaviour
         Recipes = new RecipeBook();
         Tiles = Recipes.Recipes.ToDictionary(x => x.Key, x => CreateTile(x.Value.SpriteName));
 
-        BlockCount = 100; // TODO: This will be the responsibility of the BuildNetwork in the future
-
         Cursor = Instantiate(Cursor);
         Cursor.SetActive(false);
         CursorLight = Cursor.GetComponent<Light2D>();
@@ -43,8 +39,7 @@ public class BuildControls : MonoBehaviour
             new Tuple<KeyCode, Recipe>(KeyCode.Alpha2, Recipes.Recipes["forge"]),
             new Tuple<KeyCode, Recipe>(KeyCode.Alpha3, Recipes.Recipes["storage"]),
             new Tuple<KeyCode, Recipe>(KeyCode.Alpha4, Recipes.Recipes["solar"]),
-            new Tuple<KeyCode, Recipe>(KeyCode.Alpha5, Recipes.Recipes["battery"]),
-            new Tuple<KeyCode, Recipe>(KeyCode.Alpha6, Recipes.Recipes["portal"])
+            new Tuple<KeyCode, Recipe>(KeyCode.Alpha5, Recipes.Recipes["battery"])
         };
     }
 
@@ -200,12 +195,25 @@ public class BuildControls : MonoBehaviour
         {
             if (TryGetComponent<BuildNetwork>(out var network))
             {
-                network.RemoveStructure(cursor.Map, (Vector2Int)cursor.Position);
+                var structure = network.GetStructure(cursor.Map, (Vector2Int)cursor.Position);
+                if (structure == null)
+                {
+                    // TODO: Determine material by tile
+                    if (network.TryAddMaterial(new MaterialQuantity { Id = "stone", Quantity = 1 }))
+                    {
+                        cursor.Map.SetTile(cursor.Position, null);
+                    }
+                }
+                else
+                {
+                    if (network.TryRemoveStructure(cursor.Map, (Vector2Int)cursor.Position))
+                    {
+                        cursor.Map.SetTile(cursor.Position, null);
+                    }
+                }
             }
 
-            // TODO: Add structure back to inventory
-            BlockCount++; // TODO: This will be the responsibility of network.RemoveStructure in the future
-            cursor.Map.SetTile(cursor.Position, null);
+            // Reduce target mass
         }
     }
 
@@ -213,11 +221,9 @@ public class BuildControls : MonoBehaviour
     {
         if (cursor.CurrentSprite == null)
         {
-            if (SelectedRecipe != null && BlockCount > 0)
+            if (SelectedRecipe != null)
             {
                 // TODO: Make sure to not build on top of self buildDistance.magnitude > 2.1
-
-
                 BuildStructure(cursor.Map, cursor.Position, SelectedRecipe);
             }
         }
@@ -239,6 +245,8 @@ public class BuildControls : MonoBehaviour
                 }
 
                 tileMap.SetTile(tileCoordinate, Tiles[recipe.Id]);
+
+                // Increase target mass
             }
         }
     }

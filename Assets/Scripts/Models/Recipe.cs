@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Assets.Scripts.Models
 {
@@ -13,5 +14,7 @@ namespace Assets.Scripts.Models
         public float SecondsToBuild { get; set; }
 
         public Type StructureClass { get; set; }
+
+        public List<MaterialQuantity> Cost { get; set; }
     }
 }

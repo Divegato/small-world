@@ -40,7 +40,7 @@ public class RecipePanel : MonoBehaviour
 
     public void SelectRecipe()
     {
-        Forge.BuildRecipe(SelectedRecipe);
+        Forge.SelectRecipe(SelectedRecipe);
         gameObject.SetActive(false);
     }
 

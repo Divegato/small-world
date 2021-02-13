@@ -4,6 +4,8 @@ using UnityEngine.Tilemaps;
 
 public abstract class Structure
 {
+    public abstract Recipe GetRecipe();
+
     public Tilemap Parent { get; set; }
 
     public Vector2Int GridLocation { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Helpers;
 using UnityEngine;
@@ -6,32 +7,26 @@ using UnityEngine.Tilemaps;
 
 public static class HexTilePlanet
 {
+    private const float HexSize = 1.28f;
+    private const int chunkRadius = 8;
+
+    private const double Roughness = 0.5;
+    public static double min = double.MaxValue;
+    public static double max = double.MinValue;
+
+    // TODO: Break into chunks
     public static void Generate(float radius, Transform parent)
     {
         var points = Geometry.GetCircle(radius * 0.9f, 100);
         var core = GeneratePlanet.GenerateShape("Core", "Background", points, parent);
         core.transform.localPosition = Vector3.forward;
 
-        var body = new GameObject { name = "HexPlanet", tag = "Planet" };
-        body.transform.parent = core.transform;
-        body.transform.localPosition = Vector3.back;
+        // Determine amount of chunks
+        var intRadius = Mathf.FloorToInt(radius);
+        var radiusPowerOfTwo = Mathf.NextPowerOfTwo(intRadius * 2);
 
-        body.AddComponent<Deconstructable>();
-
-        var hexSize = 1.33f;
-        var grid = body.AddComponent<Grid>();
-        grid.cellLayout = GridLayout.CellLayout.Hexagon;
-        grid.cellSize = new Vector3(Mathf.Sqrt(3) * hexSize, 2 * hexSize, 1);
-
-        var tileMap = body.AddComponent<Tilemap>();
-        tileMap.tileAnchor = Vector3.zero;
-
-        var renderer = body.AddComponent<TilemapRenderer>();
-
-        var gravity = body.AddComponent<GravitySource>();
-        gravity.GravityPower = Mathf.PI * Mathf.Pow(radius, 2);
-
-        var sprites = Resources.LoadAll<Sprite>("Tilemap/hex-tile-samples");
+        // Generate terrain
+        var sprites = Resources.LoadAll<Sprite>("Tilemap/terrain-tiles");
         var tiles = sprites.Select(x =>
         {
             var tile = ScriptableObject.CreateInstance<Tile>();
@@ -41,16 +36,29 @@ public static class HexTilePlanet
             return tile;
         }).ToArray();
 
-        var intRadius = Mathf.FloorToInt(radius);
-
-        var radiusPowerOfTwo = 2;
-        while (intRadius * 2 > radiusPowerOfTwo)
-        {
-            radiusPowerOfTwo *= 2;
-        }
-
-        var heightMap = new DiamondSquare(radiusPowerOfTwo, tiles.Length, UnityEngine.Random.value).getData();
+        var heightMap = new DiamondSquare(radiusPowerOfTwo, Roughness, UnityEngine.Random.value).getData();
         var tileIndex = UnityEngine.Random.Range(0, tiles.Length);
+
+        var chunkArea = HexMath.GetHexArea(chunkRadius);
+        var shift = HexMath.GetHexShiftForChunks(chunkRadius);
+
+        var chunkDictionary = new Dictionary<string, Tilemap>();
+
+        for (int i = 0; i < heightMap.GetLength(0); i++)
+        {
+            for (int j = 0; j < heightMap.GetLength(1); j++)
+            {
+                var height = heightMap[i, j];
+                if (height < min)
+                {
+                    min = height;
+                }
+                if (height > max)
+                {
+                    max = height;
+                }
+            }
+        }
 
         for (int x = 0; x < radiusPowerOfTwo; x++)
         {
@@ -62,36 +70,73 @@ public static class HexTilePlanet
                 var row = (xCoord * -1) - yCoord;
                 var col = xCoord + (row - (row & 1)) / 2;
 
-                var cubeCoordinate = HexCoordinates.ConvertOffsetToCube(row, col);
+                var cubeCoordinate = HexMath.ConvertOffsetToCube(row, col);
 
-                var actualPosition = new Vector2(hexSize * Mathf.Sqrt(3) * (col + 0.5f * (row & 1)), hexSize * 3 / 2 * row);
+                var actualPosition = new Vector2(HexSize * Mathf.Sqrt(3) * (col + 0.5f * (row & 1)), HexSize * 3 / 2 * row);
 
                 if (actualPosition.magnitude < radius)
                 {
-                    var index = Math.Max(0, Math.Min((int)Math.Floor(heightMap[row + intRadius, col + intRadius]), tiles.Length - 1));
-
-                    if (index == 5)
+                    var index = (int)Math.Floor((heightMap[row + intRadius, col + intRadius] + Roughness) * Roughness * (tiles.Length));
+                    if (index >= 0 && index < tiles.Length) // Index out of range is caves
                     {
-                        // cave
+                        try
+                        {
+                            var chunkCoord = HexMath.HexToChunk(cubeCoordinate, chunkArea, shift);
+                            var id = chunkCoord.ToString();
+
+                            if (!chunkDictionary.ContainsKey(id))
+                            {
+                                var body = new GameObject { name = "Chunk-" + id, tag = "Planet" };
+                                body.transform.parent = core.transform;
+                                body.transform.localPosition = Vector3.back; // TODO: Set chunk offset
+
+                                body.AddComponent<Deconstructable>();
+
+                                var grid = body.AddComponent<Grid>();
+                                grid.cellLayout = GridLayout.CellLayout.Hexagon;
+                                grid.cellSize = new Vector3(Mathf.Sqrt(3) * HexSize, 2 * HexSize, 1);
+
+                                var tileMap = body.AddComponent<Tilemap>();
+                                tileMap.tileAnchor = Vector3.zero;
+
+                                var renderer = body.AddComponent<TilemapRenderer>();
+
+                                chunkDictionary[id] = tileMap;
+                            }
+
+                            chunkDictionary[id].SetTile(new Vector3Int(col, row, 0), tiles[index]);
+
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
                     }
                     else
                     {
-                        tileMap.SetTile(new Vector3Int(col, row, 0), tiles[index]);
+                        Debug.LogError("Index: " + index + " is out of range.");
                     }
                 }
             }
         }
 
-        var rigidBody = body.AddComponent<Rigidbody2D>();
-        rigidBody.bodyType = RigidbodyType2D.Kinematic;
-        rigidBody.mass = Mathf.PI * Mathf.Pow(radius, 2);
-        rigidBody.gravityScale = 0;
-        rigidBody.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        foreach (var chunk in chunkDictionary.Values.Select(x => x.gameObject))
+        {
+            var gravity = chunk.AddComponent<GravitySource>();
+            // TODO: Set gravity based on number (and mass?) of tiles
+            gravity.GravityPower = chunkArea;
 
-        var tileCollider = body.AddComponent<TilemapCollider2D>();
-        tileCollider.usedByComposite = true;
+            var rigidBody = chunk.AddComponent<Rigidbody2D>();
+            rigidBody.bodyType = RigidbodyType2D.Kinematic;
+            rigidBody.mass = chunkArea;
+            rigidBody.gravityScale = 0;
+            rigidBody.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
-        var collider = body.AddComponent<CompositeCollider2D>();
-        collider.geometryType = CompositeCollider2D.GeometryType.Polygons;
+            var tileCollider = chunk.AddComponent<TilemapCollider2D>();
+            tileCollider.usedByComposite = true;
+
+            var collider = chunk.AddComponent<CompositeCollider2D>();
+            collider.geometryType = CompositeCollider2D.GeometryType.Polygons;
+        }
     }
 }
