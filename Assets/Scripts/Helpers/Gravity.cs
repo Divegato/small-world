@@ -5,17 +5,63 @@ namespace Assets.Scripts.Helpers
     public static class Gravity
     {
         public const float GravitationalConstant = 100;
+        public static float MaxTime = 0;
 
-        public static Vector2 GetAverageGravitationalForce(Rigidbody2D target)
+        public static Vector2 GetAverageGravitationalForce(Vector2 centerOfMass, float mass, bool showDebug = false)
         {
-            var gravitySources = Object.FindObjectsOfType<GravitySource>();
-            // TODO: Probably don't want to use Rigidbody2D to get these values.
-            var targetGravity = new GravitySource { CenterOfMass = target.centerOfMass + target.position, GravityPower = target.mass };
+            System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+            stopWatch.Start();
+
+            var gravitySources = Object.FindObjectsOfType<PlanetarySystem>();
 
             var averageForce = Vector2.zero;
             foreach (var source in gravitySources)
             {
-                averageForce += source.GetForce(targetGravity);
+                if ((centerOfMass - source.CenterOfMass).magnitude > source.RadiusOfInfluence)
+                {
+                    if (showDebug) Debug.DrawLine(centerOfMass, source.CenterOfMass, Color.gray);
+                    averageForce += CalculateGravity(centerOfMass, mass, source.CenterOfMass, source.Mass);
+                }
+                else
+                {
+                    foreach (var body in source.Bodies)
+                    {
+                        if ((centerOfMass - body.CenterOfMass).magnitude > body.RadiusOfInfluence)
+                        {
+                            if (showDebug) Debug.DrawLine(centerOfMass, body.CenterOfMass, Color.gray);
+                            averageForce += CalculateGravity(centerOfMass, mass, body.CenterOfMass, body.Mass);
+                        }
+                        else
+                        {
+                            foreach (var chunk in body.Chunks)
+                            {
+                                if ((centerOfMass - chunk.CenterOfMass).magnitude > chunk.RadiusOfInfluence)
+                                {
+                                    if (showDebug) Debug.DrawLine(centerOfMass, chunk.CenterOfMass, Color.gray);
+                                    averageForce += CalculateGravity(centerOfMass, mass, chunk.CenterOfMass, chunk.Mass);
+                                }
+                                else
+                                {
+                                    foreach (var tile in chunk.Tiles)
+                                    {
+                                        var location = chunk.Map.CellToWorld((Vector3Int)tile.GridPosition);
+                                        if (showDebug) Debug.DrawLine(centerOfMass, location, Color.gray);
+                                        averageForce += CalculateGravity(centerOfMass, mass, location, tile.Mass);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            stopWatch.Stop();
+            System.TimeSpan ts = stopWatch.Elapsed;
+
+            if (ts.Milliseconds > MaxTime)
+            {
+                MaxTime = ts.Milliseconds;
+                Debug.LogWarning("Time to process gravity: " + MaxTime);
             }
 
             return averageForce;
@@ -25,11 +71,10 @@ namespace Assets.Scripts.Helpers
         {
             var distance = centerOfMass - targetPosition;
 
-            // TODO: This isn't granular enough at close distances.
             var multiplier = 1f;
-            if (distance.magnitude < 50)
+            if (distance.magnitude < 1)
             {
-                multiplier = Mathf.Exp(-1 * (50f - distance.magnitude) / 2);
+                multiplier = 0;
             }
 
             var force = GravitationalConstant * (Mathf.Max(1f, targetMass) * Mathf.Max(1f, mass) / Mathf.Pow(Mathf.Max(1f, distance.magnitude), 2f));

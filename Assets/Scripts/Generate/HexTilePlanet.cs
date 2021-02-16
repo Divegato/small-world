@@ -11,17 +11,15 @@ public static class HexTilePlanet
     private const int chunkRadius = 8;
 
     private const double Roughness = 0.5;
-    public static double min = double.MaxValue;
-    public static double max = double.MinValue;
 
-    // TODO: Break into chunks
     public static void Generate(float radius, Transform parent)
     {
+        // Generate core background
         var points = Geometry.GetCircle(radius * 0.9f, 100);
         var core = GeneratePlanet.GenerateShape("Core", "Background", points, parent);
         core.transform.localPosition = Vector3.forward;
 
-        // Determine amount of chunks
+        // Determine terrain size
         var intRadius = Mathf.FloorToInt(radius);
         var radiusPowerOfTwo = Mathf.NextPowerOfTwo(intRadius * 2);
 
@@ -42,24 +40,9 @@ public static class HexTilePlanet
         var chunkArea = HexMath.GetHexArea(chunkRadius);
         var shift = HexMath.GetHexShiftForChunks(chunkRadius);
 
-        var chunkDictionary = new Dictionary<string, Tilemap>();
+        var chunkDictionary = new Dictionary<string, HexChunk>();
 
-        for (int i = 0; i < heightMap.GetLength(0); i++)
-        {
-            for (int j = 0; j < heightMap.GetLength(1); j++)
-            {
-                var height = heightMap[i, j];
-                if (height < min)
-                {
-                    min = height;
-                }
-                if (height > max)
-                {
-                    max = height;
-                }
-            }
-        }
-
+        // Place tiles
         for (int x = 0; x < radiusPowerOfTwo; x++)
         {
             for (int y = 0; y < radiusPowerOfTwo; y++)
@@ -77,6 +60,7 @@ public static class HexTilePlanet
                 if (actualPosition.magnitude < radius)
                 {
                     var index = (int)Math.Floor((heightMap[row + intRadius, col + intRadius] + Roughness) * Roughness * (tiles.Length));
+                    // TODO: Make more caves
                     if (index >= 0 && index < tiles.Length) // Index out of range is caves
                     {
                         try
@@ -101,10 +85,14 @@ public static class HexTilePlanet
 
                                 var renderer = body.AddComponent<TilemapRenderer>();
 
-                                chunkDictionary[id] = tileMap;
+                                var chunk = body.AddComponent<HexChunk>();
+                                chunk.Parent = parent.GetComponent<CelestialBody>();
+                                chunk.Map = tileMap;
+
+                                chunkDictionary[id] = chunk;
                             }
 
-                            chunkDictionary[id].SetTile(new Vector3Int(col, row, 0), tiles[index]);
+                            chunkDictionary[id].AddTile(new Vector2Int(col, row), tiles[index]);
 
                         }
                         catch (Exception)
@@ -120,22 +108,18 @@ public static class HexTilePlanet
             }
         }
 
-        foreach (var chunk in chunkDictionary.Values.Select(x => x.gameObject))
+        foreach (var chunk in chunkDictionary.Values)
         {
-            var gravity = chunk.AddComponent<GravitySource>();
-            // TODO: Set gravity based on number (and mass?) of tiles
-            gravity.GravityPower = chunkArea;
-
-            var rigidBody = chunk.AddComponent<Rigidbody2D>();
-            rigidBody.bodyType = RigidbodyType2D.Kinematic;
-            rigidBody.mass = chunkArea;
+            var rigidBody = chunk.gameObject.AddComponent<Rigidbody2D>();
+            rigidBody.bodyType = RigidbodyType2D.Static;
+            rigidBody.mass = chunk.Mass;
             rigidBody.gravityScale = 0;
-            rigidBody.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+            rigidBody.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
 
-            var tileCollider = chunk.AddComponent<TilemapCollider2D>();
+            var tileCollider = chunk.gameObject.AddComponent<TilemapCollider2D>();
             tileCollider.usedByComposite = true;
 
-            var collider = chunk.AddComponent<CompositeCollider2D>();
+            var collider = chunk.gameObject.AddComponent<CompositeCollider2D>();
             collider.geometryType = CompositeCollider2D.GeometryType.Polygons;
         }
     }

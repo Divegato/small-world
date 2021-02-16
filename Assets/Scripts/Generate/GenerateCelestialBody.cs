@@ -2,30 +2,34 @@
 
 public static class GenerateCelestialBody
 {
-    public static GameObject Generate(CelestialBody model, Vector3 position)
+    public static GameObject Generate(CelestialBodyModel model, Vector3 position, PlanetarySystem parent)
     {
         var body = new GameObject(model.Name);
         body.transform.position = position;
 
-        var planet = body.AddComponent<Planet>();
-        planet.Radius = model.Radius;
-
         var rotation = body.AddComponent<Rotation>();
         rotation.RotationsPerMinute = Random.Range(0f, 10f);
 
-        if (model.Type == CelestialBodyType.Planet)
+        switch (model.Type)
         {
-            //var type = Random.Range(0, 2);
-
-            //switch (type)
-            //{
-            //    case 0:
-            //        GeneratePlanet.GenerateCoreWithSlicesPlanet(model.Radius, body.transform);
-            //        break;
-            //    case 1:
-            HexTilePlanet.Generate(model.Radius, body.transform);
-            //        break;
-            //}
+            case CelestialBodyType.Star:
+                break;
+            case CelestialBodyType.Planet:
+                var planet = body.AddComponent<Planet>();
+                planet.Radius = model.Radius;
+                planet.RadiusOfInfluence = model.Radius * 10;
+                planet.Parent = parent;
+                HexTilePlanet.Generate(model.Radius, body.transform);
+                break;
+            case CelestialBodyType.Moon:
+                var moon = body.AddComponent<CelestialBody>();
+                moon.Radius = model.Radius;
+                moon.Parent = parent;
+                moon.RadiusOfInfluence = model.Radius * 10;
+                HexTilePlanet.Generate(model.Radius, body.transform);
+                break;
+            default:
+                break;
         }
 
         return body;

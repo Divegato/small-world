@@ -1,6 +1,6 @@
 ﻿public enum CelestialBodyType
 {
     Star,
-    Planet
-
+    Planet,
+    Moon
 }

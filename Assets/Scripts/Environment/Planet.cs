@@ -1,10 +1,3 @@
-﻿using UnityEngine;
-
-public class Planet : MonoBehaviour
+﻿public class Planet : CelestialBody
 {
-    public float Radius;
-
-    void Start()
-    {
-    }
 }

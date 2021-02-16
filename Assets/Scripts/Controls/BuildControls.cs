@@ -97,17 +97,17 @@ public class BuildControls : MonoBehaviour
             var target = hit.transform.gameObject;
             var color = Color.cyan;
 
-            if (target.TryGetComponent<Tilemap>(out var tileMap))
+            if (target.TryGetComponent<HexChunk>(out var chunk))
             {
-                var center = tileMap.GetCellCenterWorld(Vector3Int.zero) - tileMap.transform.position;
-                var tileCoordinate = tileMap.WorldToCell((Vector3)mouseWorldPos - center);
-                var tileLocation = tileMap.GetCellCenterWorld(tileCoordinate);
-                var localPosition = tileMap.CellToLocalInterpolated(tileCoordinate);
+                var center = chunk.Map.GetCellCenterWorld(Vector3Int.zero) - chunk.Map.transform.position;
+                var tileCoordinate = chunk.Map.WorldToCell((Vector3)mouseWorldPos - center);
+                var tileLocation = chunk.Map.GetCellCenterWorld(tileCoordinate);
+                var localPosition = chunk.Map.CellToLocalInterpolated(tileCoordinate);
 
-                var existingSprite = tileMap.GetSprite(tileCoordinate);
+                var existingSprite = chunk.Map.GetSprite(tileCoordinate);
                 CursorTarget = new TileCursor
                 {
-                    Map = tileMap,
+                    Chunk = chunk,
                     Position = tileCoordinate,
                     CurrentSprite = existingSprite
                 };
@@ -147,14 +147,14 @@ public class BuildControls : MonoBehaviour
             {
                 var targets = Physics2D.OverlapCircleAll(transform.position, BuildDistance);
 
-                Tilemap tileMap = null;
-                var found = targets.Any(x => x.gameObject.TryGetComponent(out tileMap));
+                HexChunk chunk = null;
+                var found = targets.Any(x => x.gameObject.TryGetComponent(out chunk));
                 if (found)
                 {
-                    Vector3Int tileCoordinate = tileMap.WorldToCell(target);
+                    Vector3Int tileCoordinate = chunk.Map.WorldToCell(target);
                     CursorTarget = new TileCursor
                     {
-                        Map = tileMap,
+                        Chunk = chunk,
                         Position = tileCoordinate
                     };
                 }
@@ -184,7 +184,7 @@ public class BuildControls : MonoBehaviour
         {
             if (TryGetComponent<BuildNetwork>(out var network))
             {
-                network.ActivateStructure(cursor.Map, (Vector2Int)cursor.Position);
+                network.ActivateStructure(cursor.Chunk.Map, (Vector2Int)cursor.Position);
             }
         }
     }
@@ -195,25 +195,23 @@ public class BuildControls : MonoBehaviour
         {
             if (TryGetComponent<BuildNetwork>(out var network))
             {
-                var structure = network.GetStructure(cursor.Map, (Vector2Int)cursor.Position);
+                var structure = network.GetStructure(cursor.Chunk.Map, (Vector2Int)cursor.Position);
                 if (structure == null)
                 {
                     // TODO: Determine material by tile
                     if (network.TryAddMaterial(new MaterialQuantity { Id = "stone", Quantity = 1 }))
                     {
-                        cursor.Map.SetTile(cursor.Position, null);
+                        cursor.Chunk.RemoveTile((Vector2Int)cursor.Position);
                     }
                 }
                 else
                 {
-                    if (network.TryRemoveStructure(cursor.Map, (Vector2Int)cursor.Position))
+                    if (network.TryRemoveStructure(cursor.Chunk.Map, (Vector2Int)cursor.Position))
                     {
-                        cursor.Map.SetTile(cursor.Position, null);
+                        cursor.Chunk.RemoveTile((Vector2Int)cursor.Position);
                     }
                 }
             }
-
-            // Reduce target mass
         }
     }
 
@@ -224,12 +222,12 @@ public class BuildControls : MonoBehaviour
             if (SelectedRecipe != null)
             {
                 // TODO: Make sure to not build on top of self buildDistance.magnitude > 2.1
-                BuildStructure(cursor.Map, cursor.Position, SelectedRecipe);
+                BuildStructure(cursor.Chunk, cursor.Position, SelectedRecipe);
             }
         }
     }
 
-    private void BuildStructure(Tilemap tileMap, Vector3Int tileCoordinate, Recipe recipe)
+    private void BuildStructure(HexChunk chunk, Vector3Int tileCoordinate, Recipe recipe)
     {
         if (TryGetComponent<BuildNetwork>(out var network))
         {
@@ -238,15 +236,13 @@ public class BuildControls : MonoBehaviour
                 if (recipe.StructureClass != null)
                 {
                     Structure structure = (Structure)Activator.CreateInstance(recipe.StructureClass);
-                    structure.Parent = tileMap;
+                    structure.Parent = chunk.Map;
                     structure.GridLocation = (Vector2Int)tileCoordinate;
                     structure.Definition = recipe;
                     network.AddStructure(structure);
                 }
 
-                tileMap.SetTile(tileCoordinate, Tiles[recipe.Id]);
-
-                // Increase target mass
+                chunk.AddTile((Vector2Int)tileCoordinate, Tiles[recipe.Id]);
             }
         }
     }

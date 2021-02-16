@@ -8,7 +8,7 @@ public class GravitySource : MonoBehaviour
     public float GravityPower = 8;
     public Vector2 CenterOfMass;
 
-    public Vector2 GetForce(GravitySource target)
+    public void Update()
     {
         TryGetComponent<Rigidbody2D>(out var rigidBody);
         if (rigidBody != null && rigidBody?.mass != GravityPower)
@@ -26,8 +26,11 @@ public class GravitySource : MonoBehaviour
         {
             CenterOfMass = (rigidBody?.centerOfMass ?? Vector2.zero) + (Vector2)transform.position;
         }
+    }
 
-        return Gravity.CalculateGravity(target.CenterOfMass, target.GravityPower, CenterOfMass, GravityPower);
+    public Vector2 GetForce(Vector2 centerOfMass, float gravityPower)
+    {
+        return Gravity.CalculateGravity(centerOfMass, gravityPower, CenterOfMass, GravityPower);
     }
 
     void OnDrawGizmos()
