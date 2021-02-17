@@ -34,6 +34,16 @@ public static class HexTilePlanet
             return tile;
         }).ToArray();
 
+        var animatedTile = ScriptableObject.CreateInstance<AnimatedTile>();
+        var sandSphere = Resources.LoadAll<Sprite>("Tilemap/SandSphere_SpriteSheet1")
+            .Union(Resources.LoadAll<Sprite>("Tilemap/SandSphere_SpriteSheet2"))
+            .Union(Resources.LoadAll<Sprite>("Tilemap/SandSphere_SpriteSheet3"))
+            .ToArray();
+        animatedTile.m_AnimatedSprites = sandSphere;
+        animatedTile.m_TileColliderType = Tile.ColliderType.Grid;
+        animatedTile.m_MinSpeed = 30f;
+        animatedTile.m_MaxSpeed = 60f;
+
         var heightMap = new DiamondSquare(radiusPowerOfTwo, Roughness, UnityEngine.Random.value).getData();
         var tileIndex = UnityEngine.Random.Range(0, tiles.Length);
 
@@ -61,7 +71,7 @@ public static class HexTilePlanet
                 {
                     var index = (int)Math.Floor((heightMap[row + intRadius, col + intRadius] + Roughness) * Roughness * (tiles.Length));
                     // TODO: Make more caves
-                    if (index >= 0 && index < tiles.Length) // Index out of range is caves
+                    if (index >= 0 && index < tiles.Length && index != 5) // Index out of range is caves
                     {
                         try
                         {
@@ -92,7 +102,8 @@ public static class HexTilePlanet
                                 chunkDictionary[id] = chunk;
                             }
 
-                            chunkDictionary[id].AddTile(new Vector2Int(col, row), tiles[index]);
+                            // chunkDictionary[id].AddTile(new Vector2Int(col, row), tiles[index]);
+                            chunkDictionary[id].AddTile(new Vector2Int(col, row), animatedTile);
 
                         }
                         catch (Exception)

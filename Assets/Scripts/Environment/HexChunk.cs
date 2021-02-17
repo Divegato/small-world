@@ -29,7 +29,7 @@ public class HexChunk : MonoBehaviour
         CenterOfMass = Collider.bounds.center;
     }
 
-    public void AddTile(Vector2Int position, Tile tile, float mass = 1)
+    public void AddTile(Vector2Int position, TileBase tile, float mass = 1)
     {
         Tiles.Add(new HexTile { GridPosition = position, Mass = mass });
         Map.SetTile((Vector3Int)position, tile);
